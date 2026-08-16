@@ -1,10 +1,13 @@
 using System.Collections;
 using UnityEngine;
 
-public interface ICoroutinePerformer
+namespace Assets._Project.Develop.Runtime.Utilities.CoroutinesManagment
 {
-    //для защиты сервиса корутин от ручного удаления
+    public interface ICoroutinePerformer
+    {
+        //для защиты сервиса корутин от ручного удаления
 
-    Coroutine StartPerform(IEnumerator coroutineFunction);
-    void StopPerform(Coroutine coroutine);
+        Coroutine StartPerform(IEnumerator coroutineFunction);
+        void StopPerform(Coroutine coroutine);
+    }
 }

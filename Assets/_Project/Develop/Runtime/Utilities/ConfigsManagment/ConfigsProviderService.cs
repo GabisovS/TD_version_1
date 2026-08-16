@@ -3,34 +3,38 @@ using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
 
-//L1 - создаем сервис по загрузке конфигов
-//L1 - Откуда брать конфиги
-public class ConfigsProviderService 
+namespace Assets._Project.Develop.Runtime.Utilities.ConfigsManagment
 {
-    private readonly Dictionary<Type, object> _configs = new();
 
-    private readonly IConfigsLoader[] _loaders;
-
-    public ConfigsProviderService(params IConfigsLoader[] loaders)
+    //L1 - создаем сервис по загрузке конфигов
+    //L1 - Откуда брать конфиги
+    public class ConfigsProviderService
     {
-        _loaders = loaders;
+        private readonly Dictionary<Type, object> _configs = new();
+
+        private readonly IConfigsLoader[] _loaders;
+
+        public ConfigsProviderService(params IConfigsLoader[] loaders)
+        {
+            _loaders = loaders;
+        }
+
+        //Метод по загрузке конфигов
+        public IEnumerator LoadAsync()
+        {
+            _configs.Clear();
+
+            foreach (IConfigsLoader loader in _loaders)
+                yield return loader.LoadAsync(loadedConfigs => _configs.AddRange(loadedConfigs));
+        }
+
+        public T GetConfig<T>() where T : class
+        {
+            if (_configs.ContainsKey(typeof(T)) == false)
+                throw new InvalidOperationException($"Not found config by {typeof(T)}");
+
+            return (T)_configs[typeof(T)];
+        }
+
     }
-
-    //Метод по загрузке конфигов
-    public IEnumerator LoadAsync()
-    {
-        _configs.Clear();
-
-        foreach(IConfigsLoader loader in _loaders)
-            yield return loader.LoadAsync(loadedConfigs => _configs.AddRange(loadedConfigs));
-    }
-
-    public T GetConfig<T>() where T: class
-    {
-        if (_configs.ContainsKey(typeof(T)) == false)
-            throw new InvalidOperationException($"Not found config by {typeof(T)}");
-
-        return (T)_configs[typeof(T)];
-    }
-
 }

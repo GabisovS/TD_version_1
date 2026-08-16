@@ -1,35 +1,40 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Assets._Project.Develop.Runtime.Utilities.AssetsManagment;
 using UnityEngine;
 
-//L1 - Откуда брать конфиги
-public class ResourcesConfigsLoader : IConfigsLoader
+namespace Assets._Project.Develop.Runtime.Utilities.ConfigsManagment
 {
-    private readonly ResourcesAssetsLoader _resources;
 
-    //словарь который хранит тип и путь конфига
-    private readonly Dictionary<Type, string> _configsResourcesPaths = new()
+    //L1 - Откуда брать конфиги
+    public class ResourcesConfigsLoader : IConfigsLoader
     {
+        private readonly ResourcesAssetsLoader _resources;
 
-    };
-
-    public ResourcesConfigsLoader(ResourcesAssetsLoader resources)
-    {
-        _resources = resources;
-    }
-
-    public IEnumerator LoadAsync(Action<Dictionary<Type, object>> onConfigsLoaded)
-    {
-        Dictionary<Type, object> loadedConfigs = new();
-
-        foreach (KeyValuePair<Type, string> configResourcesPath in _configsResourcesPaths)
+        //словарь который хранит тип и путь конфига
+        private readonly Dictionary<Type, string> _configsResourcesPaths = new()
         {
-            ScriptableObject config = _resources.Load<ScriptableObject>(configResourcesPath.Value);
-            loadedConfigs.Add(configResourcesPath.Key, config);
-            yield return null;
+
+        };
+
+        public ResourcesConfigsLoader(ResourcesAssetsLoader resources)
+        {
+            _resources = resources;
         }
 
-        onConfigsLoaded?.Invoke(loadedConfigs);
+        public IEnumerator LoadAsync(Action<Dictionary<Type, object>> onConfigsLoaded)
+        {
+            Dictionary<Type, object> loadedConfigs = new();
+
+            foreach (KeyValuePair<Type, string> configResourcesPath in _configsResourcesPaths)
+            {
+                ScriptableObject config = _resources.Load<ScriptableObject>(configResourcesPath.Value);
+                loadedConfigs.Add(configResourcesPath.Key, config);
+                yield return null;
+            }
+
+            onConfigsLoaded?.Invoke(loadedConfigs);
+        }
     }
 }

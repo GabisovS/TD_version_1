@@ -1,17 +1,20 @@
 using System.Collections;
 using UnityEngine;
 
-public class CoroutinesPerformer : MonoBehaviour, ICoroutinePerformer
+namespace Assets._Project.Develop.Runtime.Utilities.CoroutinesManagment
 {
-    private void Awake()
+    public class CoroutinesPerformer : MonoBehaviour, ICoroutinePerformer
     {
-        //Чтобы этот сервис не уничтожался при переходе между сценами
-        DontDestroyOnLoad(this);
+        private void Awake()
+        {
+            //Чтобы этот сервис не уничтожался при переходе между сценами
+            DontDestroyOnLoad(this);
+        }
+
+        public Coroutine StartPerform(IEnumerator coroutineFunction)
+            => StartCoroutine(coroutineFunction);
+
+        public void StopPerform(Coroutine coroutine)
+            => StopCoroutine(coroutine);
     }
-
-    public Coroutine StartPerform(IEnumerator coroutineFunction)
-        => StartCoroutine(coroutineFunction);
-
-    public void StopPerform(Coroutine coroutine)
-        => StopCoroutine(coroutine);
 }
