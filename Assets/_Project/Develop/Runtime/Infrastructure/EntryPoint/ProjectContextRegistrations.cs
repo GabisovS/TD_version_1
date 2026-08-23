@@ -9,7 +9,7 @@ using Assets._Project.Develop.Runtime.Utilities.LoadingScreen;
 namespace Assets._Project.Develop.Runtime.Infrastructure.EntryPoint
 {
     //L1 - Реализуем точку входа
-    public class EntryPointRegistrations
+    public class ProjectContextRegistrations
     {
         public static void Process(DIContainer container)
         {

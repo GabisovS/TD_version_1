@@ -1,0 +1,15 @@
+﻿using Assets._Project.Develop.Runtime.Utilities.SceneManagment;
+
+namespace Assets._Project.Develop.Runtime.Gameplay.Infrastructure
+{
+    //L1 - Передача доп параметров на сцену
+    public class GameplayInputArgs : IInputSceneArgs
+    {
+        public GameplayInputArgs(int levelNumber)
+        {
+            LevelNumber = levelNumber;
+        }
+
+        public int LevelNumber {  get;  }
+    }
+}

@@ -17,15 +17,15 @@ namespace Assets._Project.Develop.Runtime.Infrastructure.EntryPoint
             //Подгружаем первичные настройки
             SetupAppSettings();
                         
-            Debug.Log("Process registration services");
+            Debug.Log("Процесс регистрации сервисов всего проекта");
 
-            DIContainer container = new DIContainer();
-            
+            DIContainer projectContainer = new DIContainer(); //глобальный контейнер; L1 - Поддержка глобального контейнера и контейнера сцены
+
             //Процесс регистрации сервисов
-            EntryPointRegistrations.Process(container);
+            ProjectContextRegistrations.Process(projectContainer); //L1 - Поддержка глобального контейнера и контейнера сцены
 
             //Запускаем точку входа
-            container.Resolve<ICoroutinePerformer>().StartPerform(Initialize(container));
+            projectContainer.Resolve<ICoroutinePerformer>().StartPerform(Initialize(projectContainer));
         }
 
         private void SetupAppSettings()

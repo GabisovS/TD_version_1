@@ -13,20 +13,21 @@ namespace Assets._Project.Develop.Runtime.Utilities.SceneManagment
     {
         private readonly SceneLoaderService _sceneLoaderService; //для загрузки сцен
         private readonly ILoadingScreen _loadingScreen; //Для вызова загрузочного экрана
-        private readonly DIContainer _container; //Для передачи контейнера между сценами
+        private readonly DIContainer _projectContainer; //Для передачи контейнера между сценами
 
         public SceneSwitcherService(
             SceneLoaderService sceneLoaderService, 
             ILoadingScreen loadingScreen, 
-            DIContainer container)
+            DIContainer projectContainer)
         {
             _sceneLoaderService = sceneLoaderService;
             _loadingScreen = loadingScreen;
-            _container = container;
+            _projectContainer = projectContainer;
         }
 
         //асинхронная подругзка сцен
-        public IEnumerator ProcessSwitchTo(string sceneName)
+        //L1 - Передача доп параметров на сцену
+        public IEnumerator ProcessSwitchTo(string sceneName, IInputSceneArgs sceneArgs = null)
         {
             _loadingScreen.Show();
 
@@ -42,8 +43,15 @@ namespace Assets._Project.Develop.Runtime.Utilities.SceneManagment
 
             if (sceneBootstrap == null)
                 throw new NullReferenceException(nameof(sceneBootstrap) + " not found");
+
+            //Создаем новый экз ДИконтейнера и передаем в него родителя, чтобы каждый раз создавался новый контейнер
+            //L1 - Поддержка глобального контейнера и контейнера сцены
+            DIContainer sceneContainer = new DIContainer(_projectContainer);
+
+            sceneBootstrap.ProcessRigstrations(sceneContainer,sceneArgs);
+
             //нашли бутстрап на сцене, проинициализировали его и закрыли загрузочный экран
-            yield return sceneBootstrap.Initialize(_container);
+            yield return sceneBootstrap.Initialize();
 
             _loadingScreen.Hide();
              
