@@ -31,7 +31,9 @@ namespace Assets._Project.Develop.Runtime.Meta.Infrastructure
         public override void Run()
         {
             Debug.Log("Старт сцены меню");
+
         }
+
 
         private void Update()
         {
