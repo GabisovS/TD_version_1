@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using UnityEngine;
 using Assets._Project.Develop.Runtime.Infrastructure;
 using Assets._Project.Develop.Runtime.Infrastructure.DI;
@@ -6,6 +7,10 @@ using Assets._Project.Develop.Runtime.Utilities.SceneManagment;
 using Assets._Project.Develop.Runtime.Utilities.CoroutinesManagment;
 using Assets._Project.Develop.Runtime.Gameplay.Infrastructure;
 using Assets._Project.Develop.Runtime.Meta.Features.Wallet;
+using Assets._Project.Develop.Runtime.Utilities.DataManagment;
+using System.Collections.Generic;
+using Assets._Project.Develop.Runtime.Utilities.DataManagment.Serializes;
+using Unity.VisualScripting;
 
 namespace Assets._Project.Develop.Runtime.Meta.Infrastructure
 {
@@ -16,6 +21,7 @@ namespace Assets._Project.Develop.Runtime.Meta.Infrastructure
 
         //test
         private WalletService _walletService;
+        private PlayerData _playerData;
 
         //L1 - Поддержка глобального контейнера и контейнера сцены
         public override void ProcessRigstrations(DIContainer container, IInputSceneArgs sceneArgs = null)
@@ -29,6 +35,14 @@ namespace Assets._Project.Develop.Runtime.Meta.Infrastructure
             Debug.Log("Инициаплизация сцены меню");
 
             _walletService = _container.Resolve<WalletService>();
+
+            //test
+            _playerData = new PlayerData();
+            _playerData.WalletData = new Dictionary<CurrencyTypes, int>()
+            {
+                {CurrencyTypes.Gold, 10 },
+                {CurrencyTypes.Diamond, 150 },
+            };
 
             yield break; //брейк потому что ожидать тут нечего
         }
