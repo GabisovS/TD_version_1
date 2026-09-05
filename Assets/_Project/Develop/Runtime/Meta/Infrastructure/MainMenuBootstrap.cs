@@ -22,6 +22,9 @@ namespace Assets._Project.Develop.Runtime.Meta.Infrastructure
         //test
         private WalletService _walletService;
         private PlayerData _playerData;
+        //L2 - Тестируем сервис сохранений
+        private ISaveLoadService _saveLoadService;
+        private ICoroutinePerformer _coroutinePerformer1;
 
         //L1 - Поддержка глобального контейнера и контейнера сцены
         public override void ProcessRigstrations(DIContainer container, IInputSceneArgs sceneArgs = null)
@@ -35,6 +38,10 @@ namespace Assets._Project.Develop.Runtime.Meta.Infrastructure
             Debug.Log("Инициаплизация сцены меню");
 
             _walletService = _container.Resolve<WalletService>();
+
+            //test
+            _saveLoadService = _container.Resolve<ISaveLoadService>();
+            _coroutinePerformer1 = _container.Resolve<ICoroutinePerformer>();
 
             //test
             _playerData = new PlayerData();
@@ -79,6 +86,28 @@ namespace Assets._Project.Develop.Runtime.Meta.Infrastructure
                     Debug.Log("Золота осталось: " + _walletService.GetCurrency(CurrencyTypes.Gold).Value);
                 }
             }
+
+            if (Input.GetKeyDown(KeyCode.S))
+            {
+                _coroutinePerformer1.StartPerform(_saveLoadService.Save(_playerData));
+                Debug.Log("Сохранение было вызвано");
+            }
+
+            if (Input.GetKeyDown(KeyCode.D))
+            {
+                _coroutinePerformer1.StartPerform(LoadPlaeyData());
+            }
+        }
+
+        //test L2 - Тестируем сервис сохранений
+        private IEnumerator LoadPlaeyData()
+        {
+            PlayerData loadedPlayerData = null;
+
+            yield return _saveLoadService.Load<PlayerData>(data => loadedPlayerData = data);
+
+            Debug.Log($"Золота в загр данных: { loadedPlayerData.WalletData[CurrencyTypes.Gold]}");
+            Debug.Log($"Алмазы в загр данных: { loadedPlayerData.WalletData[CurrencyTypes.Diamond]}");
         }
     }
 }
