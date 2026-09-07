@@ -11,6 +11,7 @@ using Assets._Project.Develop.Runtime.Utilities.DataManagment;
 using System.Collections.Generic;
 using Assets._Project.Develop.Runtime.Utilities.DataManagment.Serializes;
 using Unity.VisualScripting;
+using Assets._Project.Develop.Runtime.Utilities.DataManagment.DataProviders;
 
 namespace Assets._Project.Develop.Runtime.Meta.Infrastructure
 {
@@ -22,8 +23,10 @@ namespace Assets._Project.Develop.Runtime.Meta.Infrastructure
         //test
         private WalletService _walletService;
         private PlayerData _playerData;
-        //L2 - Тестируем сервис сохранений
-        private ISaveLoadService _saveLoadService;
+
+        //L2 - Реализуем сброс данных на старте игры
+        private PlayerDataProvider _playerDataProvider;
+
         private ICoroutinePerformer _coroutinePerformer1;
 
         //L1 - Поддержка глобального контейнера и контейнера сцены
@@ -39,17 +42,9 @@ namespace Assets._Project.Develop.Runtime.Meta.Infrastructure
 
             _walletService = _container.Resolve<WalletService>();
 
-            //test
-            _saveLoadService = _container.Resolve<ISaveLoadService>();
+            _playerDataProvider = _container.Resolve<PlayerDataProvider>();
             _coroutinePerformer1 = _container.Resolve<ICoroutinePerformer>();
 
-            //test
-            _playerData = new PlayerData();
-            _playerData.WalletData = new Dictionary<CurrencyTypes, int>()
-            {
-                {CurrencyTypes.Gold, 10 },
-                {CurrencyTypes.Diamond, 150 },
-            };
 
             yield break; //брейк потому что ожидать тут нечего
         }
@@ -89,25 +84,15 @@ namespace Assets._Project.Develop.Runtime.Meta.Infrastructure
 
             if (Input.GetKeyDown(KeyCode.S))
             {
-                _coroutinePerformer1.StartPerform(_saveLoadService.Save(_playerData));
+                _coroutinePerformer1.StartPerform(_playerDataProvider.Save());
                 Debug.Log("Сохранение было вызвано");
             }
 
-            if (Input.GetKeyDown(KeyCode.D))
+/*            if (Input.GetKeyDown(KeyCode.D))
             {
                 _coroutinePerformer1.StartPerform(LoadPlaeyData());
-            }
+            }*/
         }
 
-        //test L2 - Тестируем сервис сохранений
-        private IEnumerator LoadPlaeyData()
-        {
-            PlayerData loadedPlayerData = null;
-
-            yield return _saveLoadService.Load<PlayerData>(data => loadedPlayerData = data);
-
-            Debug.Log($"Золота в загр данных: { loadedPlayerData.WalletData[CurrencyTypes.Gold]}");
-            Debug.Log($"Алмазы в загр данных: { loadedPlayerData.WalletData[CurrencyTypes.Diamond]}");
-        }
     }
 }

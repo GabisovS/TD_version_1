@@ -6,6 +6,7 @@ using Assets._Project.Develop.Runtime.Utilities.AssetsManagment;
 using Assets._Project.Develop.Runtime.Utilities.ConfigsManagment;
 using Assets._Project.Develop.Runtime.Utilities.CoroutinesManagment;
 using Assets._Project.Develop.Runtime.Utilities.DataManagment;
+using Assets._Project.Develop.Runtime.Utilities.DataManagment.DataProviders;
 using Assets._Project.Develop.Runtime.Utilities.DataManagment.DataRepository;
 using Assets._Project.Develop.Runtime.Utilities.DataManagment.KeysStorage;
 using Assets._Project.Develop.Runtime.Utilities.DataManagment.Serializes;
@@ -30,7 +31,17 @@ namespace Assets._Project.Develop.Runtime.Infrastructure.EntryPoint
             container.RegisterAsSingle<ILoadingScreen>(CreateLoadingScreen);
             container.RegisterAsSingle(CreateWalletService);
             container.RegisterAsSingle<ISaveLoadService>(CreateSaveLoadService);
+            container.RegisterAsSingle(CreatePlayerDataProvider);
         }
+
+        //L2 - Задача сброса данных до дефолтного состояния
+        //L2 - Реализуем сброс данных на старте игры
+        //L2 - Откуда брать стартовое состояние данных
+        private static PlayerDataProvider CreatePlayerDataProvider(DIContainer c)
+    => new PlayerDataProvider(
+        c.Resolve<ISaveLoadService>(), //достаем из контейнера ISaveloadService
+        c.Resolve<ConfigsProviderService>());
+
 
         //L2 - Регистрируем сервис
         private static SaveLoadService CreateSaveLoadService(DIContainer c)
@@ -53,7 +64,7 @@ namespace Assets._Project.Develop.Runtime.Infrastructure.EntryPoint
             foreach (CurrencyTypes currencyType in Enum.GetValues(typeof(CurrencyTypes)))
                 currencies[currencyType] = new ReactiveVariable<int>();
 
-            return new WalletService(currencies);
+            return new WalletService(currencies, c.Resolve<PlayerDataProvider>());
         }
 
         //L1 - Организуем переход между сценами

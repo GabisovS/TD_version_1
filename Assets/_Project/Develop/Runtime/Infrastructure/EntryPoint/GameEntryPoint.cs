@@ -2,6 +2,7 @@
 using Assets._Project.Develop.Runtime.Infrastructure.DI;
 using Assets._Project.Develop.Runtime.Utilities.ConfigsManagment;
 using Assets._Project.Develop.Runtime.Utilities.CoroutinesManagment;
+using Assets._Project.Develop.Runtime.Utilities.DataManagment.DataProviders;
 using Assets._Project.Develop.Runtime.Utilities.LoadingScreen;
 using Assets._Project.Develop.Runtime.Utilities.SceneManagment;
 using UnityEngine;
@@ -37,16 +38,26 @@ namespace Assets._Project.Develop.Runtime.Infrastructure.EntryPoint
         //L1 - Точка входа. Инициализация всех сервисов
         //L1 - Внедряем загрузрчный экран
         //L1 - Организуем переход между сценами
+        //L2- Задача сброса данных до дефолтного состояния
         private IEnumerator Initialize(DIContainer container) //точка входа выполнена через коротину
         {
             ILoadingScreen loadingScreen = container.Resolve<ILoadingScreen>();
             SceneSwitcherService sceneSwitcherService = container.Resolve<SceneSwitcherService>();
+            PlayerDataProvider playerDataProvider = container.Resolve<PlayerDataProvider>();
 
             loadingScreen.Show();
 
             Debug.Log("Наичнается инициализация сервисов");
 
             yield return container.Resolve<ConfigsProviderService>().LoadAsync();//т.к. метод асинхронный надо подождать его выполнение
+
+            //проверяем есть ли актуальные данные 
+            bool isPlayerDataSaveExists = false;
+            yield return playerDataProvider.Exists(result => isPlayerDataSaveExists = result);
+            if (isPlayerDataSaveExists)
+                yield return playerDataProvider.Load();
+            else
+                playerDataProvider.Reset();
 
             //строка для имитации загрузки других сервисов
             yield return new WaitForSeconds(1f);
