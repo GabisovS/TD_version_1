@@ -12,6 +12,7 @@ namespace Assets._Project.Develop.Runtime.Infrastructure.EntryPoint
     //L1 - Реализуем точку входа
     public class GameEntryPoint : MonoBehaviour
     {
+        //L2 - Добавляем NonLazy регистрации
         private void Awake()
         {
             Debug.Log("Start project, setup properties");
@@ -24,6 +25,8 @@ namespace Assets._Project.Develop.Runtime.Infrastructure.EntryPoint
 
             //Процесс регистрации сервисов
             ProjectContextRegistrations.Process(projectContainer); //L1 - Поддержка глобального контейнера и контейнера сцены
+
+            projectContainer.Initialize();
 
             //Запускаем точку входа
             projectContainer.Resolve<ICoroutinePerformer>().StartPerform(Initialize(projectContainer));
@@ -39,6 +42,7 @@ namespace Assets._Project.Develop.Runtime.Infrastructure.EntryPoint
         //L1 - Внедряем загрузрчный экран
         //L1 - Организуем переход между сценами
         //L2- Задача сброса данных до дефолтного состояния
+
         private IEnumerator Initialize(DIContainer container) //точка входа выполнена через коротину
         {
             ILoadingScreen loadingScreen = container.Resolve<ILoadingScreen>();

@@ -27,6 +27,7 @@ namespace Assets._Project.Develop.Runtime.Utilities.SceneManagment
 
         //асинхронная подругзка сцен
         //L1 - Передача доп параметров на сцену
+        //L2 - Добавляем NonLazy регистрации
         public IEnumerator ProcessSwitchTo(string sceneName, IInputSceneArgs sceneArgs = null)
         {
             _loadingScreen.Show();
@@ -49,6 +50,8 @@ namespace Assets._Project.Develop.Runtime.Utilities.SceneManagment
             DIContainer sceneContainer = new DIContainer(_projectContainer);
 
             sceneBootstrap.ProcessRigstrations(sceneContainer,sceneArgs);
+
+            sceneContainer.Initialize();
 
             //нашли бутстрап на сцене, проинициализировали его и закрыли загрузочный экран
             yield return sceneBootstrap.Initialize();

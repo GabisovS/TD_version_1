@@ -4,6 +4,7 @@ using UnityEditor.PackageManager.Requests;
 
 namespace Assets._Project.Develop.Runtime.Infrastructure.DI
 {
+
     //L1 - Первая версия DI container
     //L1 - решаем проблему цикличесих зависимостей
     //L1 - Реализуем систему родительских контейнеров
@@ -22,7 +23,8 @@ namespace Assets._Project.Develop.Runtime.Infrastructure.DI
         public DIContainer(DIContainer parent) => _parent= parent;
 
         //Регистрация в единственном экземпляре
-        public void RegisterAsSingle<T>(Func<DIContainer, T> creator)
+        //L2 - Добавляем NonLazy регистрации
+        public IRegistrationOptions RegisterAsSingle<T>(Func<DIContainer, T> creator)
         {
             if (IsAlreadyRegister<T>())
                 throw new InvalidOperationException($"{typeof(T)} already register");
@@ -30,6 +32,8 @@ namespace Assets._Project.Develop.Runtime.Infrastructure.DI
             //регистрация способа создания сервиса в виде делегата и типа по которому будет запрашиваться сервис
             Registration registration = new Registration(container => creator.Invoke(container));
             _container.Add(typeof(T), registration);
+
+            return registration;
         }
 
         //Метод для проверки уже регистрированных типов
@@ -67,6 +71,16 @@ namespace Assets._Project.Develop.Runtime.Infrastructure.DI
                 _requests.Remove(typeof(T)); //удаление запроса
             }
             throw new InvalidOperationException($"Registration for {typeof(T)} not exist");
+        }
+
+        //L2 - Добавляем NonLazy регистрации
+        public void Initialize()
+        {
+            foreach (Registration registration in _container.Values)
+            {
+                if (registration.IsNonLazy)
+                    registration.CreateInstanceFrom(this);
+            }
         }
 
     }

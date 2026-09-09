@@ -16,7 +16,8 @@ namespace Assets._Project.Develop.Runtime.Utilities.ConfigsManagment
         //словарь который хранит тип и путь конфига
         private readonly Dictionary<Type, string> _configsResourcesPaths = new()
         {
-            {typeof(StartWalletConfig), "Configs/Meta/Wallet/StartWalletConfig" }     //L2 - Откуда брать стартовое состояние данных
+            {typeof(StartWalletConfig), "Configs/Meta/Wallet/StartWalletConfig" },     //L2 - Откуда брать стартовое состояние данных
+            {typeof(CurrencyIconsConfig), "Configs/Meta/Wallet/CurrencyIconsConfig" }     //L2 - Конфиг для иконок валют
         };
 
         public ResourcesConfigsLoader(ResourcesAssetsLoader resources)

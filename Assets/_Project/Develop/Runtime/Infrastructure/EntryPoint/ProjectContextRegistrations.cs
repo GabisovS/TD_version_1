@@ -29,7 +29,10 @@ namespace Assets._Project.Develop.Runtime.Infrastructure.EntryPoint
             container.RegisterAsSingle(CreateSceneLoaderService);
             container.RegisterAsSingle(CreateSceneSwitcherService);
             container.RegisterAsSingle<ILoadingScreen>(CreateLoadingScreen);
-            container.RegisterAsSingle(CreateWalletService);
+            
+            //L2 - Проверяем работу DataProvider
+            container.RegisterAsSingle(CreateWalletService).NonLazy();
+            
             container.RegisterAsSingle<ISaveLoadService>(CreateSaveLoadService);
             container.RegisterAsSingle(CreatePlayerDataProvider);
         }
