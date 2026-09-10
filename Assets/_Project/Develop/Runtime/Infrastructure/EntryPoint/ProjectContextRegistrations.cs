@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using Assets._Project.Develop.Runtime.Infrastructure.DI;
 using Assets._Project.Develop.Runtime.Meta.Features.Wallet;
+using Assets._Project.Develop.Runtime.UI;
 using Assets._Project.Develop.Runtime.Utilities.AssetsManagment;
 using Assets._Project.Develop.Runtime.Utilities.ConfigsManagment;
 using Assets._Project.Develop.Runtime.Utilities.CoroutinesManagment;
@@ -33,9 +34,14 @@ namespace Assets._Project.Develop.Runtime.Infrastructure.EntryPoint
             //L2 - Проверяем работу DataProvider
             container.RegisterAsSingle(CreateWalletService).NonLazy();
             
-            container.RegisterAsSingle<ISaveLoadService>(CreateSaveLoadService);
             container.RegisterAsSingle(CreatePlayerDataProvider);
+            container.RegisterAsSingle(CreateProjectPresentersFactory);
+            container.RegisterAsSingle<ISaveLoadService>(CreateSaveLoadService);
         }
+
+        //L2 - Фабрика для презентеров
+        private static ProjectPresentersFactory CreateProjectPresentersFactory(DIContainer c)
+            => new ProjectPresentersFactory(c);
 
         //L2 - Задача сброса данных до дефолтного состояния
         //L2 - Реализуем сброс данных на старте игры

@@ -12,6 +12,8 @@ using System.Collections.Generic;
 using Assets._Project.Develop.Runtime.Utilities.DataManagment.Serializes;
 using Unity.VisualScripting;
 using Assets._Project.Develop.Runtime.Utilities.DataManagment.DataProviders;
+using Assets._Project.Develop.Runtime.UI.CommonViews;
+using Assets._Project.Develop.Runtime.UI;
 
 namespace Assets._Project.Develop.Runtime.Meta.Infrastructure
 {
@@ -28,6 +30,11 @@ namespace Assets._Project.Develop.Runtime.Meta.Infrastructure
         private PlayerDataProvider _playerDataProvider;
 
         private ICoroutinePerformer _coroutinePerformer1;
+
+        //test
+        //L2 - Связываем готовую вью и презентер
+        [SerializeField] private IconTextView _currencyView;
+        private ProjectPresentersFactory _presentersFactory;
 
         //L1 - Поддержка глобального контейнера и контейнера сцены
         public override void ProcessRigstrations(DIContainer container, IInputSceneArgs sceneArgs = null)
