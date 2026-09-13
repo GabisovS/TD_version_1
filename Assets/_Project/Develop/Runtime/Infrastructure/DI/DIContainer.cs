@@ -74,13 +74,25 @@ namespace Assets._Project.Develop.Runtime.Infrastructure.DI
         }
 
         //L2 - Добавляем NonLazy регистрации
+        //L2 - Проблема инициализации и деинициализации сцены
+        //L2 - Прокачиваем контейнер
         public void Initialize()
         {
             foreach (Registration registration in _container.Values)
             {
                 if (registration.IsNonLazy)
                     registration.CreateInstanceFrom(this);
+
+                registration.OnInitialize();
             }
+        }
+
+        //L2 - Проблема инициализации и деинициализации сцены
+        //L2 - Прокачиваем контейнер
+        public void Dispose()
+        {
+            foreach (Registration registration in _container.Values)
+                registration.OnDispose();
         }
 
     }

@@ -1,11 +1,14 @@
-﻿using TMPro;
+﻿using Assets._Project.Develop.Runtime.UI.Core;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
+
 
 namespace Assets._Project.Develop.Runtime.UI.CommonViews
 {
     //L2 - Отображение отдельной валюты с помощью MVP
-    public class IconTextView : MonoBehaviour
+    //L2 - Создаем View динамически. Фабрика вьюх
+    public class IconTextView : MonoBehaviour, IView
     {
         [SerializeField] private TMP_Text _text;
         [SerializeField] private Image _icon;

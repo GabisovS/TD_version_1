@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using Assets._Project.Develop.Runtime.Infrastructure.DI;
 using Assets._Project.Develop.Runtime.Meta.Features.Wallet;
 using Assets._Project.Develop.Runtime.UI;
+using Assets._Project.Develop.Runtime.UI.Core;
 using Assets._Project.Develop.Runtime.Utilities.AssetsManagment;
 using Assets._Project.Develop.Runtime.Utilities.ConfigsManagment;
 using Assets._Project.Develop.Runtime.Utilities.CoroutinesManagment;
@@ -36,8 +37,13 @@ namespace Assets._Project.Develop.Runtime.Infrastructure.EntryPoint
             
             container.RegisterAsSingle(CreatePlayerDataProvider);
             container.RegisterAsSingle(CreateProjectPresentersFactory);
+            container.RegisterAsSingle(CreateViewsFactory);
             container.RegisterAsSingle<ISaveLoadService>(CreateSaveLoadService);
         }
+
+        //L2 - Создаем View динамически. Фабрика вьюх
+        private static ViewsFactory CreateViewsFactory(DIContainer c)
+            => new ViewsFactory(c.Resolve<ResourcesAssetsLoader>());
 
         //L2 - Фабрика для презентеров
         private static ProjectPresentersFactory CreateProjectPresentersFactory(DIContainer c)

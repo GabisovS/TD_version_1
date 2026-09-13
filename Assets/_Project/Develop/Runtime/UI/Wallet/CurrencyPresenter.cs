@@ -2,12 +2,16 @@
 using Assets._Project.Develop.Runtime.Configs.Meta.Wallet;
 using Assets._Project.Develop.Runtime.Meta.Features.Wallet;
 using Assets._Project.Develop.Runtime.UI.CommonViews;
+using Assets._Project.Develop.Runtime.UI.Core;
 using Assets._Project.Develop.Runtime.Utilities.Reactive;
 
 namespace Assets._Project.Develop.Runtime.UI.Wallet
 {
     //L2 - Презентер валюты
-    public class CurrencyPresenter
+    //L2 - Проблема инициализации и деинициализации сцены
+    //L2 - Прокачиваем контейнер
+    //L2 - Фиксим проблему с деинициализацией презентера кошелька
+    public class CurrencyPresenter : IPresenter
     {
         //Бизнес логика/ то что должны отобразить в UI  
         private readonly IReadOnlyVariable<int> _currency;          //ссылка на саму валюту
@@ -31,7 +35,7 @@ namespace Assets._Project.Develop.Runtime.UI.Wallet
             _view = view;
         }
 
-        public IconTextView View => _view;
+        public IconTextView View => _view; //L2 - Презентер кошелька
 
         public void Initialize() //инициализация презентера: бизнес логика передается в визуал
         {

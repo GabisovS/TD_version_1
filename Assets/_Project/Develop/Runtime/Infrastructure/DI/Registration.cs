@@ -1,4 +1,5 @@
 ﻿using System;
+using Unity.VisualScripting;
 
 namespace Assets._Project.Develop.Runtime.Infrastructure.DI
 {
@@ -26,6 +27,25 @@ namespace Assets._Project.Develop.Runtime.Infrastructure.DI
             _cachedInstance = _creator.Invoke(container);
 
             return _cachedInstance;
+        }
+
+        //L2 - Проблема инициализации и деинициализации сцены
+        //L2 - Прокачиваем контейнер
+        public void OnInitialize()
+        {
+            //если сущность создалась и она реализует интрефейс, то при вызыво метода она будет проинициализирована
+            if (_cachedInstance != null)
+                if (_cachedInstance is IInitializable initializable)
+                    initializable.Initialize();
+        }
+
+        //L2 - Проблема инициализации и деинициализации сцены
+        //L2 - Прокачиваем контейнер
+        public void OnDispose()
+        {
+            if (_cachedInstance != null)
+                if (_cachedInstance is IDisposable disposable)
+                    disposable.Dispose();
         }
 
         public void NonLazy() => IsNonLazy = true;

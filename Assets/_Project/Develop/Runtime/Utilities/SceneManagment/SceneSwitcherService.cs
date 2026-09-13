@@ -15,6 +15,10 @@ namespace Assets._Project.Develop.Runtime.Utilities.SceneManagment
         private readonly ILoadingScreen _loadingScreen; //Для вызова загрузочного экрана
         private readonly DIContainer _projectContainer; //Для передачи контейнера между сценами
 
+        //L2 - Проблема инициализации и деинициализации сцены
+        //L2 - Прокачиваем контейнер
+        private DIContainer _currentSceneContainer;//поле с контейнером текущей сцены
+
         public SceneSwitcherService(
             SceneLoaderService sceneLoaderService, 
             ILoadingScreen loadingScreen, 
@@ -32,6 +36,9 @@ namespace Assets._Project.Develop.Runtime.Utilities.SceneManagment
         {
             _loadingScreen.Show();
 
+            //Диспозим контейнер предыдущей сцены перед переходом на следующую (с проверкой на нал "?)
+            _currentSceneContainer?.Dispose();
+
             //ожидаем подгузки пустой сцены чтобы все ресурсы 
             yield return _sceneLoaderService.LoadAsync(Scenes.Empty);
 
@@ -47,11 +54,13 @@ namespace Assets._Project.Develop.Runtime.Utilities.SceneManagment
 
             //Создаем новый экз ДИконтейнера и передаем в него родителя, чтобы каждый раз создавался новый контейнер
             //L1 - Поддержка глобального контейнера и контейнера сцены
-            DIContainer sceneContainer = new DIContainer(_projectContainer);
+            //L2 - Проблема инициализации и деинициализации сцены
+            //L2 - Прокачиваем контейнер
+            _currentSceneContainer = new DIContainer(_projectContainer);
 
-            sceneBootstrap.ProcessRigstrations(sceneContainer,sceneArgs);
+            sceneBootstrap.ProcessRigstrations(_currentSceneContainer, sceneArgs);
 
-            sceneContainer.Initialize();
+            _currentSceneContainer.Initialize();
 
             //нашли бутстрап на сцене, проинициализировали его и закрыли загрузочный экран
             yield return sceneBootstrap.Initialize();

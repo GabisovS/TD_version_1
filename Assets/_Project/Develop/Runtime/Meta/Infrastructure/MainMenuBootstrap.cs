@@ -1,19 +1,17 @@
-﻿using System;
-using System.Collections;
-using UnityEngine;
+﻿using System.Collections;
+using Assets._Project.Develop.Runtime.Gameplay.Infrastructure;
 using Assets._Project.Develop.Runtime.Infrastructure;
 using Assets._Project.Develop.Runtime.Infrastructure.DI;
-using Assets._Project.Develop.Runtime.Utilities.SceneManagment;
-using Assets._Project.Develop.Runtime.Utilities.CoroutinesManagment;
-using Assets._Project.Develop.Runtime.Gameplay.Infrastructure;
 using Assets._Project.Develop.Runtime.Meta.Features.Wallet;
-using Assets._Project.Develop.Runtime.Utilities.DataManagment;
-using System.Collections.Generic;
-using Assets._Project.Develop.Runtime.Utilities.DataManagment.Serializes;
-using Unity.VisualScripting;
-using Assets._Project.Develop.Runtime.Utilities.DataManagment.DataProviders;
-using Assets._Project.Develop.Runtime.UI.CommonViews;
 using Assets._Project.Develop.Runtime.UI;
+using Assets._Project.Develop.Runtime.UI.CommonViews;
+using Assets._Project.Develop.Runtime.UI.Core;
+using Assets._Project.Develop.Runtime.UI.Wallet;
+using Assets._Project.Develop.Runtime.Utilities.CoroutinesManagment;
+using Assets._Project.Develop.Runtime.Utilities.DataManagment;
+using Assets._Project.Develop.Runtime.Utilities.DataManagment.DataProviders;
+using Assets._Project.Develop.Runtime.Utilities.SceneManagment;
+using UnityEngine;
 
 namespace Assets._Project.Develop.Runtime.Meta.Infrastructure
 {
@@ -31,10 +29,8 @@ namespace Assets._Project.Develop.Runtime.Meta.Infrastructure
 
         private ICoroutinePerformer _coroutinePerformer1;
 
-        //test
-        //L2 - Связываем готовую вью и презентер
-        [SerializeField] private IconTextView _currencyView;
-        private ProjectPresentersFactory _presentersFactory;
+
+
 
         //L1 - Поддержка глобального контейнера и контейнера сцены
         public override void ProcessRigstrations(DIContainer container, IInputSceneArgs sceneArgs = null)
@@ -51,6 +47,7 @@ namespace Assets._Project.Develop.Runtime.Meta.Infrastructure
 
             _playerDataProvider = _container.Resolve<PlayerDataProvider>();
             _coroutinePerformer1 = _container.Resolve<ICoroutinePerformer>();
+
 
 
             yield break; //брейк потому что ожидать тут нечего
@@ -95,10 +92,11 @@ namespace Assets._Project.Develop.Runtime.Meta.Infrastructure
                 Debug.Log("Сохранение было вызвано");
             }
 
-/*            if (Input.GetKeyDown(KeyCode.D))
-            {
-                _coroutinePerformer1.StartPerform(LoadPlaeyData());
-            }*/
+            /*            if (Input.GetKeyDown(KeyCode.D))
+                        {
+                            _coroutinePerformer1.StartPerform(LoadPlaeyData());
+                        }*/
+
         }
 
     }
