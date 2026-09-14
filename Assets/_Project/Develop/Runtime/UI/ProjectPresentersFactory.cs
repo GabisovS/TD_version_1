@@ -8,6 +8,7 @@ using Assets._Project.Develop.Runtime.Infrastructure.DI;
 using Assets._Project.Develop.Runtime.Meta.Features.Wallet;
 using Assets._Project.Develop.Runtime.UI.CommonViews;
 using Assets._Project.Develop.Runtime.UI.Core;
+using Assets._Project.Develop.Runtime.UI.Core.TestPopup;
 using Assets._Project.Develop.Runtime.UI.Wallet;
 using Assets._Project.Develop.Runtime.Utilities.ConfigsManagment;
 using Assets._Project.Develop.Runtime.Utilities.Reactive;
@@ -40,7 +41,7 @@ namespace Assets._Project.Develop.Runtime.UI
         }
 
 
-        //L2 - Презентер кошелька
+        //L3 - Презентер кошелька
         public WalletPresenter CreateWalletPresenter(IconTextListView view)
         {
             return new WalletPresenter(
@@ -50,14 +51,15 @@ namespace Assets._Project.Develop.Runtime.UI
                 view);
         }
 
-        /* public TestPopupPresenter CreateTestPopupPresenter(TestPopupView view)
+        //L3 - Делаем презентер тестового попапа
+        public TestPopupPresenter CreateTestPopupPresenter(TestPopupView view)
  {
-     return new TestPopupPresenter(
-         view,
-         _container.Resolve<ICoroutinesPerformer>());
+            return new TestPopupPresenter(
+                view);
+         //_container.Resolve<ICoroutinesPerformer>());
  }
 
- public LevelTilePresenter CreateLevelTilePresenter(LevelTileView view, int levelNumber)
+ /*public LevelTilePresenter CreateLevelTilePresenter(LevelTileView view, int levelNumber)
  {
      return new LevelTilePresenter(
          _container.Resolve<LevelsProgressionService>(),

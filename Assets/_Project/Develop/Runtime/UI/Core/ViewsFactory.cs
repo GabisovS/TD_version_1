@@ -6,8 +6,10 @@ using Object = UnityEngine.Object;
 
 namespace Assets._Project.Develop.Runtime.UI.Core
 {
-    //L2 - Создаем View динамически. Фабрика вьюх
-    //L2 - Динамический вариант создания вьюхи
+    //L3 - Создаем View динамически. Фабрика вьюх
+    //L3 - Динамический вариант создания вьюхи
+    //L3 - Организация главного экрана
+    //L3 - Прикручиваем вьюху к тестовому попапу
     public partial class ViewsFactory
     {
         private readonly ResourcesAssetsLoader _resourcesAssetsLoader;
@@ -15,8 +17,8 @@ namespace Assets._Project.Develop.Runtime.UI.Core
         private readonly Dictionary<string, string> _viewIDToResourcesPath = new Dictionary<string, string>()
         {
             {ViewIDs.CurrencyView, "UI/Wallet/CurrencyView" },
-            //{ViewIDs.MainMenuScreen, "UI/MainMenu/MainMenuScreenView" },
-            //{ViewIDs.TestPopup, "UI/TestPopup" },
+            {ViewIDs.MainMenuScreen, "UI/MainMenu/MainMenuScreenView" },
+            {ViewIDs.TestPopup, "UI/TestPopup" },
             //{ViewIDs.LevelTile, "UI/LevelsMenuPopup/LevelTile" },
             //{ViewIDs.LevelsMenuPopup, "UI/LevelsMenuPopup/LevelsMenuPopup" }
         };
