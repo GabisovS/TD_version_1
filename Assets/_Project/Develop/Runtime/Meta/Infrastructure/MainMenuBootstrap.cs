@@ -27,7 +27,7 @@ namespace Assets._Project.Develop.Runtime.Meta.Infrastructure
         //L2 - Реализуем сброс данных на старте игры
         private PlayerDataProvider _playerDataProvider;
 
-        private ICoroutinePerformer _coroutinePerformer1;
+        private ICoroutinesPerformer _coroutinePerformer1;
 
 
 
@@ -46,7 +46,7 @@ namespace Assets._Project.Develop.Runtime.Meta.Infrastructure
             _walletService = _container.Resolve<WalletService>();
 
             _playerDataProvider = _container.Resolve<PlayerDataProvider>();
-            _coroutinePerformer1 = _container.Resolve<ICoroutinePerformer>();
+            _coroutinePerformer1 = _container.Resolve<ICoroutinesPerformer>();
 
 
 
@@ -66,7 +66,7 @@ namespace Assets._Project.Develop.Runtime.Meta.Infrastructure
             if (Input.GetKeyDown(KeyCode.F))
             {
                 SceneSwitcherService sceneSwitcherService = _container.Resolve<SceneSwitcherService>();
-                ICoroutinePerformer coroutinePerformer = _container.Resolve<ICoroutinePerformer>();
+                ICoroutinesPerformer coroutinePerformer = _container.Resolve<ICoroutinesPerformer>();
                 //L1 - Передача доп параметров на сцену
                 coroutinePerformer.StartPerform(sceneSwitcherService.ProcessSwitchTo(Scenes.Gameplay, new GameplayInputArgs(2)));
             }

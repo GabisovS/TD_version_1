@@ -9,28 +9,27 @@ namespace Assets._Project.Develop.Runtime.UI.MainMenu
     //L3 - Организация главного экрана
     //L3 - Возвращаем отображение кошелька на главный экран
     //L3 - Открываем тестовый попап
+    //L3 - Тестируем попап
     public class MainMenuScreenView : MonoBehaviour, IView
     {
-        //public event Action OpenLevelsMenuButtonClicked;
-        public event Action OpenTestPopupButtonClicked;
+        public event Action OpenLevelsMenuButtonClicked;
 
         [field: SerializeField] public IconTextListView WalletView { get; private set; }
-        [SerializeField] private Button _openTestPopupButton;
-        //  [SerializeField] private Button _openLevelsMenuButton;
+         [SerializeField] private Button _openLevelsMenuButton;
 
         private void OnEnable()
         {
-            //_openLevelsMenuButton.onClick.AddListener(OnOpenLevelsMenuButtonClicked);
-            _openTestPopupButton.onClick.AddListener(OnOpenTestPopupButtonClicked);
+            _openLevelsMenuButton.onClick.AddListener(OnOpenLevelsMenuButtonClicked);
+      
         }
 
         private void OnDisable()
         {
-            // _openLevelsMenuButton.onClick.RemoveListener(OnOpenLevelsMenuButtonClicked);
-            _openTestPopupButton.onClick.RemoveListener(OnOpenTestPopupButtonClicked);
+            _openLevelsMenuButton.onClick.RemoveListener(OnOpenLevelsMenuButtonClicked);
+ 
         }
 
-       // private void OnOpenLevelsMenuButtonClicked() => OpenLevelsMenuButtonClicked?.Invoke();
-        private void OnOpenTestPopupButtonClicked() => OpenTestPopupButtonClicked?.Invoke();
+        private void OnOpenLevelsMenuButtonClicked() => OpenLevelsMenuButtonClicked?.Invoke();
+
     }
 }

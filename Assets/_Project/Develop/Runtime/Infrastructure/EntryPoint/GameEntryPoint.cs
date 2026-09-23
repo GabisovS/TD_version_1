@@ -29,7 +29,7 @@ namespace Assets._Project.Develop.Runtime.Infrastructure.EntryPoint
             projectContainer.Initialize();
 
             //Запускаем точку входа
-            projectContainer.Resolve<ICoroutinePerformer>().StartPerform(Initialize(projectContainer));
+            projectContainer.Resolve<ICoroutinesPerformer>().StartPerform(Initialize(projectContainer));
         }
 
         private void SetupAppSettings()

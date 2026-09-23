@@ -20,12 +20,14 @@ namespace Assets._Project.Develop.Runtime.Utilities.DataManagment.DataProviders
         }
 
 
+        //L3 - Добавляем возможность сохранения
         protected override PlayerData GetOriginData()
         {
             return new PlayerData()
             {
                 //Инициализируем все поля у PlaeyrData
                 WalletData = InitWalletData(),
+                CompletedLevels = new()
             };
         }
 

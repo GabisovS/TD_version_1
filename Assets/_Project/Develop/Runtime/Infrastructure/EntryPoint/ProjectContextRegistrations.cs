@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using Assets._Project.Develop.Runtime.Infrastructure.DI;
+using Assets._Project.Develop.Runtime.Meta.Features.LevelsProgression;
 using Assets._Project.Develop.Runtime.Meta.Features.Wallet;
 using Assets._Project.Develop.Runtime.UI;
 using Assets._Project.Develop.Runtime.UI.Core;
@@ -25,7 +26,7 @@ namespace Assets._Project.Develop.Runtime.Infrastructure.EntryPoint
     {
         public static void Process(DIContainer container)
         {
-            container.RegisterAsSingle<ICoroutinePerformer>(CreateCoroutinePerformer);
+            container.RegisterAsSingle<ICoroutinesPerformer>(CreateCoroutinePerformer);
             container.RegisterAsSingle(CreateConfigsProvuderService);
             container.RegisterAsSingle(CreateResourcesAssetsLoader);
             container.RegisterAsSingle(CreateSceneLoaderService);
@@ -39,7 +40,12 @@ namespace Assets._Project.Develop.Runtime.Infrastructure.EntryPoint
             container.RegisterAsSingle(CreateProjectPresentersFactory);
             container.RegisterAsSingle(CreateViewsFactory);
             container.RegisterAsSingle<ISaveLoadService>(CreateSaveLoadService);
+            container.RegisterAsSingle(CreateLevelsProgressionService).NonLazy();
         }
+
+        //L3 - Добавляем возможность сохранения
+        private static LevelsProgressionService CreateLevelsProgressionService(DIContainer c)
+           => new LevelsProgressionService(c.Resolve<PlayerDataProvider>());
 
         //L2 - Создаем View динамически. Фабрика вьюх
         private static ViewsFactory CreateViewsFactory(DIContainer c)

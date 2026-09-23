@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace Assets._Project.Develop.Runtime.Utilities.CoroutinesManagment
 {
-    public interface ICoroutinePerformer
+    public interface ICoroutinesPerformer
     {
         //для защиты сервиса корутин от ручного удаления
 

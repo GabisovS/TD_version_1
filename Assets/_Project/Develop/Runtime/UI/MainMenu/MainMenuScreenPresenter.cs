@@ -11,6 +11,7 @@ namespace Assets._Project.Develop.Runtime.UI.MainMenu
     //L3 - Организация главного экрана
     //L3 - Возвращаем отображение кошелька на главный экран
     //L3 - Открываем тестовый попап
+    //L3 - Тестируем попап
     public class MainMenuScreenPresenter : IPresenter
     {
         private readonly MainMenuScreenView _screen;
@@ -33,8 +34,8 @@ namespace Assets._Project.Develop.Runtime.UI.MainMenu
 
         public void Initialize()
         {
-            // _screen.OpenLevelsMenuButtonClicked += OnOpenLevelsMenuButtonClicked;
-            _screen.OpenTestPopupButtonClicked += OnOpenTestPopupButtonClicked;
+            _screen.OpenLevelsMenuButtonClicked += OnOpenLevelsMenuButtonClicked;
+            
 
             CreateWallet();
 
@@ -44,8 +45,8 @@ namespace Assets._Project.Develop.Runtime.UI.MainMenu
 
         public void Dispose()
         {
-            //_screen.OpenLevelsMenuButtonClicked -= OnOpenLevelsMenuButtonClicked;
-            _screen.OpenTestPopupButtonClicked -= OnOpenTestPopupButtonClicked;
+            _screen.OpenLevelsMenuButtonClicked -= OnOpenLevelsMenuButtonClicked;
+           
 
             foreach (IPresenter presenter in _childPresenters)
                 presenter.Dispose();
@@ -60,14 +61,10 @@ namespace Assets._Project.Develop.Runtime.UI.MainMenu
             _childPresenters.Add(walletPresenter);
         }
 
-        /*        private void OnOpenLevelsMenuButtonClicked()
-                {
-                    //_popupService.OpenLevelsMenuPopup();
-                }*/
-
-        private void OnOpenTestPopupButtonClicked()
+        private void OnOpenLevelsMenuButtonClicked()
         {
-            _popupService.OpenTestPopup();
+            _popupService.OpenLevelsMenuPopup();
         }
+
     }
 }

@@ -1,27 +1,26 @@
 ﻿using System;
 using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using Assets._Project.Develop.Runtime.Utilities.CoroutinesManagment;
+using DG.Tweening;
 using UnityEngine;
 
 namespace Assets._Project.Develop.Runtime.UI.Core
 {
     //L3 - Готовим базу под презентер
     //L3 - Делаем презентер тестового попапа
+    //L3 - Синхронизация с Presenter
     public abstract class PopupPresenterBase : IPresenter
     {
         public event Action<PopupPresenterBase> CloseRequest;
 
-        // private readonly ICoroutinesPerformer _coroutinesPerformer;
+        private readonly ICoroutinesPerformer _coroutinesPerformer;
 
-        // private Coroutine _process;
+        private Coroutine _process;
 
-        /*protected PopupPresenterBase(ICoroutinesPerformer coroutinesPerformer)
+        protected PopupPresenterBase(ICoroutinesPerformer coroutinesPerformer)
         {
             _coroutinesPerformer = coroutinesPerformer;
-        }*/
+        }
 
         protected abstract PopupViewBase PopupView { get; }
 
@@ -31,31 +30,23 @@ namespace Assets._Project.Develop.Runtime.UI.Core
 
         public virtual void Dispose()
         {
-            // KillProcess();
+            KillProcess();
 
             PopupView.CloseRequest -= OnCloseRequest;
         }
 
         public void Show()
         {
-            OnPreShow();
-            PopupView.Show();
-            OnPostShow();
+            KillProcess();
 
-            //  KillProcess();
-
-            //  _process = _coroutinesPerformer.StartPerform(ProcessShow());
+            _process = _coroutinesPerformer.StartPerform(ProcessShow());
         }
 
         public void Hide(Action callback = null)
         {
-            OnPreHide();
-            PopupView.Hide();
-            OnPostHide();
-            callback?.Invoke();
-            // KillProcess();
+            KillProcess();
 
-            // _process = _coroutinesPerformer.StartPerform(ProcessHide(callback));
+            _process = _coroutinesPerformer.StartPerform(ProcessHide(callback));
         }
 
         protected virtual void OnPostShow() { }
@@ -74,30 +65,30 @@ namespace Assets._Project.Develop.Runtime.UI.Core
 
         protected void OnCloseRequest() => CloseRequest?.Invoke(this);
 
-        /*        private IEnumerator ProcessShow()
-                {
-                    OnPreShow();
+        private IEnumerator ProcessShow()
+        {
+            OnPreShow();
 
-                    yield return PopupView.Show().WaitForCompletion();
+            yield return PopupView.Show().WaitForCompletion();
 
-                    OnPostShow();
-                }
+            OnPostShow();
+        }
 
-                private IEnumerator ProcessHide(Action callback)
-                {
-                    OnPreHide();
+        private IEnumerator ProcessHide(Action callback)
+        {
+            OnPreHide();
 
-                    yield return PopupView.Hide().WaitForCompletion();
+            yield return PopupView.Hide().WaitForCompletion();
 
-                    OnPostHide();
+            OnPostHide();
 
-                    callback?.Invoke();
-                }
+            callback?.Invoke();
+        }
 
-                private void KillProcess()
-                {
-                    if (_process != null)
-                        _coroutinesPerformer.StopPerform(_process);
-                }*/
+        private void KillProcess()
+        {
+            if (_process != null)
+                _coroutinesPerformer.StopPerform(_process);
+        }
     }
 }

@@ -1,16 +1,14 @@
-﻿namespace Assets._Project.Develop.Runtime.UI.Core.TestPopup
+﻿using Assets._Project.Develop.Runtime.Utilities.CoroutinesManagment;
+
+namespace Assets._Project.Develop.Runtime.UI.Core.TestPopup
 {
     //L3 - Делаем презентер тестового попапа
+    //L3 - Синхронизация с Presenter
     public class TestPopupPresenter : PopupPresenterBase
     {
         private readonly TestPopupView _view;
 
-        /*            public TestPopupPresenter(TestPopupView view, ICoroutinesPerformer coroutinesPerformer) : base(coroutinesPerformer)
-                    {
-                        _view = view;
-                    }*/
-
-        public TestPopupPresenter(TestPopupView view)
+        public TestPopupPresenter(TestPopupView view, ICoroutinesPerformer coroutinesPerformer) : base(coroutinesPerformer)
         {
             _view = view;
         }

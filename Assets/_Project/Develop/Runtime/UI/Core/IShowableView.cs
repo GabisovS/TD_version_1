@@ -1,12 +1,13 @@
-﻿namespace Assets._Project.Develop.Runtime.UI.Core
+﻿using DG.Tweening;
+
+namespace Assets._Project.Develop.Runtime.UI.Core
 {
     //L3 - Готовим базу под визуальную часть
+    //L3 - Синхронизация с Presenter
     public interface IShowableView : IView
     {
-        void Hide();
-        // Tween Hide();
+        Tween Hide();
 
-        void Show();
-        // Tween Show();
+        Tween Show();
     }
 }

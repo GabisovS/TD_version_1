@@ -10,6 +10,7 @@ namespace Assets._Project.Develop.Runtime.UI.Core
     //L3 - Динамический вариант создания вьюхи
     //L3 - Организация главного экрана
     //L3 - Прикручиваем вьюху к тестовому попапу
+    //L3 - Разбираем скрипты слоя View
     public partial class ViewsFactory
     {
         private readonly ResourcesAssetsLoader _resourcesAssetsLoader;
@@ -19,8 +20,8 @@ namespace Assets._Project.Develop.Runtime.UI.Core
             {ViewIDs.CurrencyView, "UI/Wallet/CurrencyView" },
             {ViewIDs.MainMenuScreen, "UI/MainMenu/MainMenuScreenView" },
             {ViewIDs.TestPopup, "UI/TestPopup" },
-            //{ViewIDs.LevelTile, "UI/LevelsMenuPopup/LevelTile" },
-            //{ViewIDs.LevelsMenuPopup, "UI/LevelsMenuPopup/LevelsMenuPopup" }
+            {ViewIDs.LevelTile, "UI/LevelsMenuPopup/LevelTile" },
+            {ViewIDs.LevelsMenuPopup, "UI/LevelsMenuPopup/LevelsMenuPopup" }
         };
 
         public ViewsFactory(ResourcesAssetsLoader resourcesAssetsLoader)

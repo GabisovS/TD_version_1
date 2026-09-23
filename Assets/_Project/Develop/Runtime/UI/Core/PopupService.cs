@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using Assets._Project.Develop.Runtime.UI.Core.TestPopup;
+using Assets._Project.Develop.Runtime.UI.LevelsMenuPopup;
 using UnityEngine;
 
 namespace Assets._Project.Develop.Runtime.UI.Core
@@ -37,16 +38,17 @@ namespace Assets._Project.Develop.Runtime.UI.Core
             return popup;
         }
 
-        /*        public LevelsMenuPopupPresenter OpenLevelsMenuPopup()
-                {
-                    LevelsMenuPopupView view = ViewsFactory.Create<LevelsMenuPopupView>(ViewIDs.LevelsMenuPopup, PopupLayer);
+        //L3 - Тестируем попап
+        public LevelsMenuPopupPresenter OpenLevelsMenuPopup()
+        {
+            LevelsMenuPopupView view = ViewsFactory.Create<LevelsMenuPopupView>(ViewIDs.LevelsMenuPopup, PopupLayer);
 
-                    LevelsMenuPopupPresenter popup = _presentersFactory.CreateLevelsMenuPopupPresenter(view);
+            LevelsMenuPopupPresenter popup = _presentersFactory.CreateLevelsMenuPopupPresenter(view);
 
-                    OnPopupCreated(popup, view);
+            OnPopupCreated(popup, view);
 
-                    return popup;
-                }*/
+            return popup;
+        }
 
         public void ClosePopup(PopupPresenterBase popup)
         {

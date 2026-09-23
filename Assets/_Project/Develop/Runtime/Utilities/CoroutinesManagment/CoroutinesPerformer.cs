@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace Assets._Project.Develop.Runtime.Utilities.CoroutinesManagment
 {
-    public class CoroutinesPerformer : MonoBehaviour, ICoroutinePerformer
+    public class CoroutinesPerformer : MonoBehaviour, ICoroutinesPerformer
     {
         private void Awake()
         {
