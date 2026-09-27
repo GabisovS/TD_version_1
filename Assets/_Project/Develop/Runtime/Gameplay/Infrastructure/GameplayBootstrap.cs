@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections;
+using Assets._Project.Develop.Runtime.Gameplay.EntitiesCore;
 using Assets._Project.Develop.Runtime.Infrastructure;
 using Assets._Project.Develop.Runtime.Infrastructure.DI;
 using Assets._Project.Develop.Runtime.Utilities.CoroutinesManagment;
@@ -10,10 +11,15 @@ namespace Assets._Project.Develop.Runtime.Gameplay.Infrastructure
 {
     //L1 - Организуем точки входа и передачу контейнера
     //L1 - Передача доп параметров на сцену
+    //L4 - Стартовая подготовка. Тестовый геймплей
+    //L4 - Тестируем работу систем
     public class GameplayBootstrap : SceneBootstrap
     {
         private DIContainer _container;
         private GameplayInputArgs _inputArgs;
+
+        [SerializeField] private TestGameplay _testGameplay;
+        private EntitiesLifeContext _entitiesLifeContext;
 
         //L1 - Поддержка глобального контейнера и контейнера сцены
         public override void ProcessRigstrations(DIContainer container, IInputSceneArgs sceneArgs = null)
@@ -34,16 +40,23 @@ namespace Assets._Project.Develop.Runtime.Gameplay.Infrastructure
 
             Debug.Log("Инициаплизация гейплейной сцены");
 
+            _entitiesLifeContext = _container.Resolve<EntitiesLifeContext>();
+
+            _testGameplay.Initialize(_container);
+
             yield break; //брейк потому что ожидать тут нечего
         }
 
         public override void Run()
         {
             Debug.Log("Старт геймплейной сцены");
+
+            _testGameplay.Run();
         }
 
         private void Update()
         {
+            _entitiesLifeContext?.Update(Time.deltaTime);
             if (Input.GetKeyDown(KeyCode.F))
             {
                 SceneSwitcherService sceneSwitcherService = _container.Resolve<SceneSwitcherService>();
