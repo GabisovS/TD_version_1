@@ -6,12 +6,13 @@ using UnityEngine;
 namespace Assets._Project.Develop.Runtime.Gameplay.Common
 {
     //L4 - Делаем регистрацию Rigidbody
+    //L4 - Пользуемся сгенерированным кодом
     public class RigidbodyEntityRegistrator : MonoEntityRegistrator
     {
         public override void Register(Entity entity)
         {
-            // entity.AddRigidbody(GetComponent<Rigidbody>());
-            entity.AddComponent(new RigidbodyComponent() { Value = GetComponent<Rigidbody>() });
+             entity.AddRigidbody(GetComponent<Rigidbody>());
+            // entity.AddComponent(new RigidbodyComponent() { Value = GetComponent<Rigidbody>() });
         }
     }
 }

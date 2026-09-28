@@ -10,6 +10,8 @@ namespace Assets._Project.Develop.Runtime.Gameplay.EntitiesCore
     //L4 - Парочка красивостей
     //L4 - Тестируем работу систем
     //L4 - Тестируем работу с MonoEntity
+    //L4 - Пользуемся сгенерированным кодом
+    //L4 - Промежуточное заключение по организации сущностей в нашей игре
     public class EntitiesFactory
     {
         private readonly DIContainer _container;
@@ -29,17 +31,17 @@ namespace Assets._Project.Develop.Runtime.Gameplay.EntitiesCore
         {
             Entity entity = CreateEmpty();
 
+            //entity
+            //    .AddComponent(new MoveDirection() { Value = new ReactiveVariable<Vector3>(Vector3.forward) })
+            //    .AddComponent(new MoveSpeed() { Value = new ReactiveVariable<float>(10) });
             entity
-                .AddComponent(new MoveDirection() { Value = new ReactiveVariable<Vector3>(Vector3.forward) })
-                .AddComponent(new MoveSpeed() { Value = new ReactiveVariable<float>(10) });
+                .AddMoveDirection()
+                .AddMoveSpeed(new ReactiveVariable<float>(10));
 
             entity.AddSystem(new RigidbodyMovementSystem());
 
             _monoEntitiesFactory.Create(entity, position, "Entities/TestEntity");
 
-            //entity
-            //    .AddMoveDirection()
-            //    .AddMoveSpeed(new ReactiveVariable<float>(10));
 
             //entity.AddSystem(new RigidbodyMovementSystem());
 

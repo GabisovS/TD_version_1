@@ -9,6 +9,7 @@ namespace Assets._Project.Develop.Runtime.Gameplay
     //L4 - Стартовая подготовка. Тестовый геймплей
     //L4 - Пользуемся фабрикой
     //L4 - Проверка системы и итог по MonoEntity
+    //L4 - Пользуемся сгенерированным кодом
     public class TestGameplay : MonoBehaviour
     {
         private DIContainer _container;
@@ -42,8 +43,8 @@ namespace Assets._Project.Develop.Runtime.Gameplay
 
             Vector3 input = new Vector3(Input.GetAxisRaw("Horizontal"), 0, Input.GetAxisRaw("Vertical"));
 
-            //_entity.MoveDirection.Value = input;
-            _entity.GetComponent<MoveDirection>().Value.Value = input;
+            _entity.MoveDirection.Value = input;
+            //_entity.GetComponent<MoveDirection>().Value.Value = input;
         }
     }
 }

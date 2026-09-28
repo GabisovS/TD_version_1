@@ -9,6 +9,7 @@ namespace Assets._Project.Develop.Runtime.Gameplay.Features.MovementFeature
     //L4 - Реализуем первую систему
     //L4 - Небольшие особенности нашей реализации
     //L4 - Доделываем механику движения с использованием rigidbody
+    //L4 - Пользуемся сгенерированным кодом
     public class RigidbodyMovementSystem : IInitializableSystem, IUpdatableSystem
     {
         private ReactiveVariable<Vector3> _moveDirection;
@@ -18,13 +19,13 @@ namespace Assets._Project.Develop.Runtime.Gameplay.Features.MovementFeature
 
         public void OnInit(Entity entity)
         {
-            //_moveDirection = entity.MoveDirection;
-            //_moveSpeed = entity.MoveSpeed;
-            //_rigidbody = entity.Rigidbody;
+            _moveDirection = entity.MoveDirection;
+            _moveSpeed = entity.MoveSpeed;
+            _rigidbody = entity.Rigidbody;
 
-            _moveDirection = entity.GetComponent<MoveDirection>().Value;
-            _moveSpeed = entity.GetComponent<MoveSpeed>().Value;
-            _rigidbody = entity.GetComponent<RigidbodyComponent>().Value;
+            //_moveDirection = entity.GetComponent<MoveDirection>().Value;
+            //_moveSpeed = entity.GetComponent<MoveSpeed>().Value;
+            //_rigidbody = entity.GetComponent<RigidbodyComponent>().Value;
         }
 
         public void OnUpdate(float deltaTime)
