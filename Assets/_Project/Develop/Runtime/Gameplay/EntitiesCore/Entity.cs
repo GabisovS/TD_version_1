@@ -7,7 +7,8 @@ namespace Assets._Project.Develop.Runtime.Gameplay.EntitiesCore
     //L4 - Организуем Entity
     //L4 - Организуем подключение систем к Entity
     //L4 - Реализуем методы жизненного цикла Entity
-    public class Entity : IDisposable
+    //L4 - Решаем проблему засорения класса Entity
+    public partial class Entity : IDisposable
     {
         private readonly Dictionary<Type, IEntityComponent> _components = new();
 
