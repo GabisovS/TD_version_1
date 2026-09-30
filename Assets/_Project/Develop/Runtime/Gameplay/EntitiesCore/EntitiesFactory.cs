@@ -1,6 +1,8 @@
 ﻿using Assets._Project.Develop.Runtime.Gameplay.EntitiesCore.Mono;
+using Assets._Project.Develop.Runtime.Gameplay.Features.LifeCycle;
 using Assets._Project.Develop.Runtime.Gameplay.Features.MovementFeature;
 using Assets._Project.Develop.Runtime.Infrastructure.DI;
+using Assets._Project.Develop.Runtime.Utilities.Conditions;
 using Assets._Project.Develop.Runtime.Utilities.Reactive;
 using UnityEngine;
 
@@ -27,7 +29,13 @@ namespace Assets._Project.Develop.Runtime.Gameplay.EntitiesCore
         }
 
         //L4 - Подключаем систему движения к тестовой сущности
-        public Entity CreateTestEntity(Vector3 position)
+        //L5 - Подготовка к созданию призрака
+        //L5 - Конфигурируем призрака и тестим
+        //L5 - Добавляем механику смерти призраку
+        //L5 - Добавляем систему релиза к сущности
+        //L5 - Тестирование и новые проблемки
+        //L5 - Внедряем условия для движения и поворота
+        public Entity CreateGhost(Vector3 position)
         {
             Entity entity = CreateEmpty();
 
@@ -36,11 +44,58 @@ namespace Assets._Project.Develop.Runtime.Gameplay.EntitiesCore
             //    .AddComponent(new MoveSpeed() { Value = new ReactiveVariable<float>(10) });
             entity
                 .AddMoveDirection()
-                .AddMoveSpeed(new ReactiveVariable<float>(10));
+                .AddMoveSpeed(new ReactiveVariable<float>(10))
+                .AddRotationDirection()
+                .AddRotationSpeed(new ReactiveVariable<float>(900))
+                .AddMaxHealth(new ReactiveVariable<float>(100))
+                .AddCurrentHealth(new ReactiveVariable<float>(100))
+                .AddIsDead()
+                .AddInDeathProcess()
+                .AddDeathProcessInitialTime(new ReactiveVariable<float>(2))
+                .AddDeathProcessCurrentTime();
+                //.AddAttackDelayEndEvent()
+                //.AddInstantAttackDamage(new ReactiveVariable<float>(50))
+                //.AddAttackCanceledEvent()
+                //.AddAttackCooldownInitialTime(new ReactiveVariable<float>(2))
+                //.AddAttackCooldownCurrentTime()
+                //.AddInAttackCooldown();
 
-            entity.AddSystem(new RigidbodyMovementSystem());
+            ICompositeCondition canMove = new CompositeCondition()
+               .Add(new FuncCondition(() => entity.IsDead.Value == false));
 
-            _monoEntitiesFactory.Create(entity, position, "Entities/TestEntity");
+            ICompositeCondition canRotate = new CompositeCondition()
+                .Add(new FuncCondition(() => entity.IsDead.Value == false));
+
+            //ICompositeCondition mustDie = new CompositeCondition()
+            //    .Add(new FuncCondition(() => entity.CurrentHealth.Value <= 0));
+
+            //ICompositeCondition mustSelfRelease = new CompositeCondition()
+            //    .Add(new FuncCondition(() => entity.IsDead.Value))
+            //    .Add(new FuncCondition(() => entity.InDeathProcess.Value == false));
+
+            //ICompositeCondition canApplyDamage = new CompositeCondition()
+            //    .Add(new FuncCondition(() => entity.IsDead.Value == false));
+
+            entity
+                  .AddCanMove(canMove)
+                  .AddCanRotate(canRotate);
+                  //.AddMustDie(mustDie)
+                  //.AddMustSelfRelease(mustSelfRelease)
+                  //.AddCanApplyDamage(canApplyDamage);
+
+            entity
+                .AddSystem(new RigidbodyMovementSystem())
+                .AddSystem(new RigidbodyRotationSystem())
+                //.AddSystem(new BodyContactsDetectingSystem())
+                //.AddSystem(new BodyContactsEntitiesFilterSystem(_collidersRegistryService))
+                //.AddSystem(new DealDamageOnContactSystem())
+               // .AddSystem(new ApplyDamageSystem())
+                .AddSystem(new DeathSystem())
+               // .AddSystem(new DisableCollidersOnDeathSystem())
+                .AddSystem(new DeathProcessTimerSystem())
+                .AddSystem(new SelfReleaseSystem(_entitiesLifeContext));
+
+            _monoEntitiesFactory.Create(entity, position, "Entities/Ghost");
 
 
             //entity.AddSystem(new RigidbodyMovementSystem());

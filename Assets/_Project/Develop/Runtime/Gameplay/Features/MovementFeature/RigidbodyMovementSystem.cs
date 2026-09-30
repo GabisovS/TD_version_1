@@ -10,18 +10,26 @@ namespace Assets._Project.Develop.Runtime.Gameplay.Features.MovementFeature
     //L4 - Небольшие особенности нашей реализации
     //L4 - Доделываем механику движения с использованием rigidbody
     //L4 - Пользуемся сгенерированным кодом
+    //L5 - Добавляем обработку смерти в другие механики
     public class RigidbodyMovementSystem : IInitializableSystem, IUpdatableSystem
     {
         private ReactiveVariable<Vector3> _moveDirection;
         private ReactiveVariable<float> _moveSpeed;
         private Rigidbody _rigidbody;
+        //private ReactiveVariable<bool> _isMoving;
+        // private ICompositeCondition _canMove;
 
-
+        private ReactiveVariable<bool> _isDead;
         public void OnInit(Entity entity)
         {
             _moveDirection = entity.MoveDirection;
             _moveSpeed = entity.MoveSpeed;
             _rigidbody = entity.Rigidbody;
+            //_isMoving = entity.IsMoving;
+
+            //_canMove = entity.CanMove;
+
+            _isDead = entity.IsDead;
 
             //_moveDirection = entity.GetComponent<MoveDirection>().Value;
             //_moveSpeed = entity.GetComponent<MoveSpeed>().Value;
@@ -30,8 +38,22 @@ namespace Assets._Project.Develop.Runtime.Gameplay.Features.MovementFeature
 
         public void OnUpdate(float deltaTime)
         {
+            //if (_canMove.Evaluate() == false)
+            //{
+            //    _rigidbody.velocity = Vector3.zero;
+            //    return;
+            //}
+
+            if (_isDead.Value)
+            {
+                _rigidbody.velocity = Vector3.zero;
+                return;
+            }
+
             Vector3 velocity = _moveDirection.Value.normalized * _moveSpeed.Value;
             //Debug.Log("Скорость: " + velocity.ToString());
+            
+            //_isMoving.Value = velocity.magnitude > 0;
             _rigidbody.velocity = velocity;
         }
 

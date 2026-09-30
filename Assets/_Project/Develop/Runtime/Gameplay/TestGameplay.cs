@@ -28,7 +28,7 @@ namespace Assets._Project.Develop.Runtime.Gameplay
         //L4 - Тестируем работу с MonoEntity
         public void Run()
         {
-            _entity = _entitiesFactory.CreateTestEntity(Vector3.zero);
+            _entity = _entitiesFactory.CreateGhost(Vector3.zero);
 
             //Entity entity = _entitiesFactory.CreateTestEntity(Vector3.zero);
 
@@ -36,15 +36,25 @@ namespace Assets._Project.Develop.Runtime.Gameplay
             _isRunning = true;
         }
 
+        //L5 - Добавляем механику смерти призраку
         private void Update()
         {
             if (_isRunning == false) //если геймплей еще не запущен
                 return;
 
+            if (Input.GetKeyDown(KeyCode.Space))
+            {
+                _entity.CurrentHealth.Value -= 50;
+                Debug.Log("Текущий руовень здоровья: " +  _entity.CurrentHealth.Value.ToString());
+            }
+
             Vector3 input = new Vector3(Input.GetAxisRaw("Horizontal"), 0, Input.GetAxisRaw("Vertical"));
 
             _entity.MoveDirection.Value = input;
             //_entity.GetComponent<MoveDirection>().Value.Value = input;
+
+            //L5 - Конфигурируем призрака и тестим
+            _entity.RotationDirection.Value = input;
         }
     }
 }
