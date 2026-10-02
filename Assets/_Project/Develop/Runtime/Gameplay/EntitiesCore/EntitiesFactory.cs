@@ -35,6 +35,8 @@ namespace Assets._Project.Develop.Runtime.Gameplay.EntitiesCore
         //L5 - Добавляем систему релиза к сущности
         //L5 - Тестирование и новые проблемки
         //L5 - Внедряем условия для движения и поворота
+        //L5 - Дорабатываем остальные системы. Новые условия
+        //L5 - Промежуточный итог по фиче смерти
         public Entity CreateGhost(Vector3 position)
         {
             Entity entity = CreateEmpty();
@@ -66,21 +68,21 @@ namespace Assets._Project.Develop.Runtime.Gameplay.EntitiesCore
             ICompositeCondition canRotate = new CompositeCondition()
                 .Add(new FuncCondition(() => entity.IsDead.Value == false));
 
-            //ICompositeCondition mustDie = new CompositeCondition()
-            //    .Add(new FuncCondition(() => entity.CurrentHealth.Value <= 0));
+            ICompositeCondition mustDie = new CompositeCondition()
+                .Add(new FuncCondition(() => entity.CurrentHealth.Value <= 0));
 
-            //ICompositeCondition mustSelfRelease = new CompositeCondition()
-            //    .Add(new FuncCondition(() => entity.IsDead.Value))
-            //    .Add(new FuncCondition(() => entity.InDeathProcess.Value == false));
+            ICompositeCondition mustSelfRelease = new CompositeCondition()
+                .Add(new FuncCondition(() => entity.IsDead.Value))
+                .Add(new FuncCondition(() => entity.InDeathProcess.Value == false));
 
             //ICompositeCondition canApplyDamage = new CompositeCondition()
             //    .Add(new FuncCondition(() => entity.IsDead.Value == false));
 
             entity
                   .AddCanMove(canMove)
-                  .AddCanRotate(canRotate);
-                  //.AddMustDie(mustDie)
-                  //.AddMustSelfRelease(mustSelfRelease)
+                  .AddCanRotate(canRotate)
+                  .AddMustDie(mustDie)
+                  .AddMustSelfRelease(mustSelfRelease);
                   //.AddCanApplyDamage(canApplyDamage);
 
             entity

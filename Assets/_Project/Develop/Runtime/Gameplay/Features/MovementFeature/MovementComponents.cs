@@ -11,6 +11,7 @@ namespace Assets._Project.Develop.Runtime.Gameplay.Features.MovementFeature
     //L4 - Доделываем механику движения с использованием rigidbody
     //L5 - Добавляем механику поворота. Данные
     //L5 - Внедряем условия для движения и поворота
+    //L5 - Дорабатываем остальные системы. Новые условия
     public class MoveDirection : IEntityComponent
     {
         public ReactiveVariable<Vector3> Value;

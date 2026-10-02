@@ -5,6 +5,7 @@ namespace Assets._Project.Develop.Runtime.Utilities.Conditions
 {
     //L5 - Реализуем ICompositeConditon
     //L5 - Добавляем варианты логических операций
+    //L5 - Промежуточный итог по фиче смерти
     public class CompositeCondition : ICompositeCondition
     {
         private List<ICondition> _conditions = new();

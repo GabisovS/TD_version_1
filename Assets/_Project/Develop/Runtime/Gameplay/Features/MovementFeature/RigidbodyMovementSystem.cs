@@ -1,6 +1,7 @@
 ﻿using Assets._Project.Develop.Runtime.Gameplay.Common;
 using Assets._Project.Develop.Runtime.Gameplay.EntitiesCore;
 using Assets._Project.Develop.Runtime.Gameplay.EntitiesCore.Systems;
+using Assets._Project.Develop.Runtime.Utilities.Conditions;
 using Assets._Project.Develop.Runtime.Utilities.Reactive;
 using UnityEngine;
 
@@ -11,13 +12,14 @@ namespace Assets._Project.Develop.Runtime.Gameplay.Features.MovementFeature
     //L4 - Доделываем механику движения с использованием rigidbody
     //L4 - Пользуемся сгенерированным кодом
     //L5 - Добавляем обработку смерти в другие механики
+    //L5 - Дорабатываем системы движения и поворота
     public class RigidbodyMovementSystem : IInitializableSystem, IUpdatableSystem
     {
         private ReactiveVariable<Vector3> _moveDirection;
         private ReactiveVariable<float> _moveSpeed;
         private Rigidbody _rigidbody;
         //private ReactiveVariable<bool> _isMoving;
-        // private ICompositeCondition _canMove;
+        private ICompositeCondition _canMove;
 
         private ReactiveVariable<bool> _isDead;
         public void OnInit(Entity entity)
@@ -27,9 +29,9 @@ namespace Assets._Project.Develop.Runtime.Gameplay.Features.MovementFeature
             _rigidbody = entity.Rigidbody;
             //_isMoving = entity.IsMoving;
 
-            //_canMove = entity.CanMove;
+            _canMove = entity.CanMove;
 
-            _isDead = entity.IsDead;
+
 
             //_moveDirection = entity.GetComponent<MoveDirection>().Value;
             //_moveSpeed = entity.GetComponent<MoveSpeed>().Value;
@@ -38,17 +40,12 @@ namespace Assets._Project.Develop.Runtime.Gameplay.Features.MovementFeature
 
         public void OnUpdate(float deltaTime)
         {
-            //if (_canMove.Evaluate() == false)
-            //{
-            //    _rigidbody.velocity = Vector3.zero;
-            //    return;
-            //}
-
-            if (_isDead.Value)
+            if (_canMove.Evaluate() == false)
             {
                 _rigidbody.velocity = Vector3.zero;
                 return;
             }
+
 
             Vector3 velocity = _moveDirection.Value.normalized * _moveSpeed.Value;
             //Debug.Log("Скорость: " + velocity.ToString());
