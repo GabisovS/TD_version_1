@@ -28,7 +28,10 @@ namespace Assets._Project.Develop.Runtime.Gameplay
         //L4 - Тестируем работу с MonoEntity
         public void Run()
         {
-            _entity = _entitiesFactory.CreateGhost(Vector3.zero);
+            
+            //L5 - Готовим метод создания основного героя
+            //_entity = _entitiesFactory.CreateGhost(Vector3.zero);
+            _entity = _entitiesFactory.CreateHero(Vector3.zero);
 
             //L5 - Добавляем коллайдеры. Механика призрака
             _entitiesFactory.CreateGhost(Vector3.zero+ Vector3.forward*5);

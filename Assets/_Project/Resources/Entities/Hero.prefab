@@ -28,7 +28,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0.5, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 0.5, y: 1, z: 0.5}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 5456153094525002011}
@@ -178,7 +178,7 @@ PrefabInstance:
     - target: {fileID: 713416037235242061, guid: ab26f7d20b84abc4ebbc50da0cd91701,
         type: 3}
       propertyPath: m_Name
-      value: Chost1
+      value: Hero
       objectReference: {fileID: 0}
     - target: {fileID: 5019322997360492674, guid: ab26f7d20b84abc4ebbc50da0cd91701,
         type: 3}
@@ -344,13 +344,13 @@ CapsuleCollider:
     m_Bits: 0
   m_ExcludeLayers:
     serializedVersion: 2
-    m_Bits: 64
+    m_Bits: 0
   m_LayerOverridePriority: 0
   m_IsTrigger: 0
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Radius: 0.65
+  m_Radius: 0.25
   m_Height: 2.28
   m_Direction: 1
   m_Center: {x: 0, y: 1.08, z: 0}
