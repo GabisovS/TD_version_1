@@ -1,7 +1,11 @@
 ﻿using Assets._Project.Develop.Runtime.Gameplay.EntitiesCore.Mono;
+using Assets._Project.Develop.Runtime.Gameplay.Features.ApplyDamage;
+using Assets._Project.Develop.Runtime.Gameplay.Features.ContactTakeDamage;
 using Assets._Project.Develop.Runtime.Gameplay.Features.LifeCycle;
 using Assets._Project.Develop.Runtime.Gameplay.Features.MovementFeature;
+using Assets._Project.Develop.Runtime.Gameplay.Features.Sensors;
 using Assets._Project.Develop.Runtime.Infrastructure.DI;
+using Assets._Project.Develop.Runtime.Utilities;
 using Assets._Project.Develop.Runtime.Utilities.Conditions;
 using Assets._Project.Develop.Runtime.Utilities.Reactive;
 using UnityEngine;
@@ -18,7 +22,7 @@ namespace Assets._Project.Develop.Runtime.Gameplay.EntitiesCore
     {
         private readonly DIContainer _container;
         private readonly EntitiesLifeContext _entitiesLifeContext;
-
+        private readonly CollidersRegistryService _collidersRegistryService;
         private readonly MonoEntitiesFactory _monoEntitiesFactory;
 
         public EntitiesFactory(DIContainer container)
@@ -26,6 +30,7 @@ namespace Assets._Project.Develop.Runtime.Gameplay.EntitiesCore
             _container = container;
            _entitiesLifeContext = _container.Resolve<EntitiesLifeContext>();
             _monoEntitiesFactory = _container.Resolve<MonoEntitiesFactory>();
+            _collidersRegistryService = _container.Resolve<CollidersRegistryService>();
         }
 
         //L4 - Подключаем систему движения к тестовой сущности
@@ -37,6 +42,10 @@ namespace Assets._Project.Develop.Runtime.Gameplay.EntitiesCore
         //L5 - Внедряем условия для движения и поворота
         //L5 - Дорабатываем остальные системы. Новые условия
         //L5 - Промежуточный итог по фиче смерти
+        //L5 - Фича получения урона. Компоненты
+        //L5 - Отслеживание контактов. Прикрепляем данные
+        //L5 - Как будем получать сущности для нанесения урона
+        //L5 - Фича нанесения урона касанием. Данные
         public Entity CreateGhost(Vector3 position)
         {
             Entity entity = CreateEmpty();
@@ -54,13 +63,13 @@ namespace Assets._Project.Develop.Runtime.Gameplay.EntitiesCore
                 .AddIsDead()
                 .AddInDeathProcess()
                 .AddDeathProcessInitialTime(new ReactiveVariable<float>(2))
-                .AddDeathProcessCurrentTime();
-                //.AddAttackDelayEndEvent()
-                //.AddInstantAttackDamage(new ReactiveVariable<float>(50))
-                //.AddAttackCanceledEvent()
-                //.AddAttackCooldownInitialTime(new ReactiveVariable<float>(2))
-                //.AddAttackCooldownCurrentTime()
-                //.AddInAttackCooldown();
+                .AddDeathProcessCurrentTime()
+                .AddTakeDamageRequest()
+                .AddTakeDamageEvent()
+                .AddContactsDetectingMask(1 << LayerMask.NameToLayer("Characters"))
+                .AddContactCollidersBuffer(new Buffer<Collider>(64))
+                .AddContactEntitiesBuffer(new Buffer<Entity>(64))
+                .AddBodyContactDamage(new ReactiveVariable<float>(50));
 
             ICompositeCondition canMove = new CompositeCondition()
                .Add(new FuncCondition(() => entity.IsDead.Value == false));
@@ -75,25 +84,29 @@ namespace Assets._Project.Develop.Runtime.Gameplay.EntitiesCore
                 .Add(new FuncCondition(() => entity.IsDead.Value))
                 .Add(new FuncCondition(() => entity.InDeathProcess.Value == false));
 
-            //ICompositeCondition canApplyDamage = new CompositeCondition()
-            //    .Add(new FuncCondition(() => entity.IsDead.Value == false));
+            ICompositeCondition canApplyDamage = new CompositeCondition()
+                .Add(new FuncCondition(() => entity.IsDead.Value == false));
 
             entity
                   .AddCanMove(canMove)
                   .AddCanRotate(canRotate)
                   .AddMustDie(mustDie)
-                  .AddMustSelfRelease(mustSelfRelease);
-                  //.AddCanApplyDamage(canApplyDamage);
+                  .AddMustSelfRelease(mustSelfRelease)
+                  .AddCanApplyDamage(canApplyDamage);
 
+            //L5 - Проверяем систему получения урона
+            //L5 - Тестируем системы детектирования контактов
+            //L5 - Проверяем систему нанесения урона касанием
+            //L5 - Тестируем систему (отклшючения коллайдеров)
             entity
                 .AddSystem(new RigidbodyMovementSystem())
                 .AddSystem(new RigidbodyRotationSystem())
-                //.AddSystem(new BodyContactsDetectingSystem())
-                //.AddSystem(new BodyContactsEntitiesFilterSystem(_collidersRegistryService))
-                //.AddSystem(new DealDamageOnContactSystem())
-               // .AddSystem(new ApplyDamageSystem())
+                .AddSystem(new BodyContactsDetectingSystem())
+                .AddSystem(new BodyContactsEntitiesFilterSystem(_collidersRegistryService))
+                .AddSystem(new DealDamageOnContactSystem())
+                .AddSystem(new ApplyDamageSystem())
                 .AddSystem(new DeathSystem())
-               // .AddSystem(new DisableCollidersOnDeathSystem())
+                .AddSystem(new DisableCollidersOnDeathSystem())
                 .AddSystem(new DeathProcessTimerSystem())
                 .AddSystem(new SelfReleaseSystem(_entitiesLifeContext));
 

@@ -30,6 +30,9 @@ namespace Assets._Project.Develop.Runtime.Gameplay
         {
             _entity = _entitiesFactory.CreateGhost(Vector3.zero);
 
+            //L5 - Добавляем коллайдеры. Механика призрака
+            _entitiesFactory.CreateGhost(Vector3.zero+ Vector3.forward*5);
+
             //Entity entity = _entitiesFactory.CreateTestEntity(Vector3.zero);
 
 
@@ -42,11 +45,9 @@ namespace Assets._Project.Develop.Runtime.Gameplay
             if (_isRunning == false) //если геймплей еще не запущен
                 return;
 
+            //L5 - Фича получения урона. Компоненты
             if (Input.GetKeyDown(KeyCode.Space))
-            {
-                _entity.CurrentHealth.Value -= 50;
-                Debug.Log("Текущий руовень здоровья: " +  _entity.CurrentHealth.Value.ToString());
-            }
+                _entity.TakeDamageRequest.Invoke(50);
 
             Vector3 input = new Vector3(Input.GetAxisRaw("Horizontal"), 0, Input.GetAxisRaw("Vertical"));
 

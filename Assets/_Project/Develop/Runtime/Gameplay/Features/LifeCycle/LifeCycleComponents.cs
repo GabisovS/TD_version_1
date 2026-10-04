@@ -14,6 +14,7 @@ namespace Assets._Project.Develop.Runtime.Gameplay.Features.LifeCycle
     //L5 - Обработка смерти – продолжительный процесс
     //L5 - Продолжительная обработка смерти. Данные
     //L5 - Дорабатываем остальные системы.Новые условия
+    //L5 - Отключение коллайдеров при смерти.Компоненты
     public class CurrentHealth : IEntityComponent
     {
         public ReactiveVariable<float> Value;
@@ -55,8 +56,8 @@ namespace Assets._Project.Develop.Runtime.Gameplay.Features.LifeCycle
         public ReactiveVariable<bool> Value;
     }
 
-    //public class DisableCollidersOnDeath : IEntityComponent
-    //{
-    //    public List<Collider> Value;
-    //}
+    public class DisableCollidersOnDeath : IEntityComponent
+    {
+        public List<Collider> Value;
+    }
 }
