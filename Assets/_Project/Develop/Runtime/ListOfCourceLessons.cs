@@ -58,6 +58,7 @@ public class ListOfCourceLessons : MonoBehaviour
 
     //Hero
     //L5 - Готовим префаб основного героя
+    //L5 - Добавляем данные для реализации выстрела - Добавили точку выстрела
 
 
 

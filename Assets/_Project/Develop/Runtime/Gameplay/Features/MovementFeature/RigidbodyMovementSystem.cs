@@ -13,12 +13,13 @@ namespace Assets._Project.Develop.Runtime.Gameplay.Features.MovementFeature
     //L4 - Пользуемся сгенерированным кодом
     //L5 - Добавляем обработку смерти в другие механики
     //L5 - Дорабатываем системы движения и поворота
+    //L5 - Добавляем компонент для определения движения сущности
     public class RigidbodyMovementSystem : IInitializableSystem, IUpdatableSystem
     {
         private ReactiveVariable<Vector3> _moveDirection;
         private ReactiveVariable<float> _moveSpeed;
         private Rigidbody _rigidbody;
-        //private ReactiveVariable<bool> _isMoving;
+        private ReactiveVariable<bool> _isMoving;
         private ICompositeCondition _canMove;
 
         private ReactiveVariable<bool> _isDead;
@@ -27,7 +28,7 @@ namespace Assets._Project.Develop.Runtime.Gameplay.Features.MovementFeature
             _moveDirection = entity.MoveDirection;
             _moveSpeed = entity.MoveSpeed;
             _rigidbody = entity.Rigidbody;
-            //_isMoving = entity.IsMoving;
+            _isMoving = entity.IsMoving;
 
             _canMove = entity.CanMove;
 
@@ -49,8 +50,8 @@ namespace Assets._Project.Develop.Runtime.Gameplay.Features.MovementFeature
 
             Vector3 velocity = _moveDirection.Value.normalized * _moveSpeed.Value;
             //Debug.Log("Скорость: " + velocity.ToString());
-            
-            //_isMoving.Value = velocity.magnitude > 0;
+
+            _isMoving.Value = velocity.magnitude > 0; // если больше нуля - значит мы двигаемся
             _rigidbody.velocity = velocity;
         }
 

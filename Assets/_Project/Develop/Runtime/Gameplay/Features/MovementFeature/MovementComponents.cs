@@ -12,6 +12,7 @@ namespace Assets._Project.Develop.Runtime.Gameplay.Features.MovementFeature
     //L5 - Добавляем механику поворота. Данные
     //L5 - Внедряем условия для движения и поворота
     //L5 - Дорабатываем остальные системы. Новые условия
+    //L5 - Добавляем компонент для определения движения сущности
     public class MoveDirection : IEntityComponent
     {
         public ReactiveVariable<Vector3> Value;
@@ -22,10 +23,10 @@ namespace Assets._Project.Develop.Runtime.Gameplay.Features.MovementFeature
         public ReactiveVariable<float> Value;
     }
 
-    //public class IsMoving : IEntityComponent
-    //{
-    //    public ReactiveVariable<bool> Value;
-    //}
+    public class IsMoving : IEntityComponent
+    {
+        public ReactiveVariable<bool> Value;
+    }
 
     public class CanMove : IEntityComponent
     {
