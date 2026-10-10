@@ -33,6 +33,8 @@ namespace Assets._Project.Develop.Runtime.Gameplay.Features.MovementFeature
 
              _canRotate = entity.CanRotate;
 
+            //L5 - Проблема стартового поворота
+            //L5 - Фиксим проблему стартового поворота
             if (_direction.Value != Vector3.zero)
                 _rigidbody.transform.rotation = Quaternion.LookRotation(_direction.Value.normalized);
         }

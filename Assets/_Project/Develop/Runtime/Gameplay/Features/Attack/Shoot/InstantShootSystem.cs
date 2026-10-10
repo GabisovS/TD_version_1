@@ -7,9 +7,10 @@ using UnityEngine;
 namespace Assets._Project.Develop.Runtime.Gameplay.Features.Attack.Shoot
 {
     //L5 - Реализуем систему выстрела
+    //L5 - Добавляем стрельбу снарядами
     public class InstantShootSystem : IInitializableSystem, IDisposableSystem
     {
-        private readonly EntitiesFactory _entitiesFactory;
+        private readonly EntitiesFactory _entitiesFactory; //нужна чтобы была возможность создавать в данной системе прожектайлы
 
         private ReactiveEvent _attackDelayEndEvent;
 
@@ -35,7 +36,7 @@ namespace Assets._Project.Develop.Runtime.Gameplay.Features.Attack.Shoot
 
         private void OnAttackDelayEnd()
         {
-            //_entitiesFactory.CreateProjectile(_shootPoint.position, _shootPoint.forward, _damage.Value);
+            _entitiesFactory.CreateProjectile(_shootPoint.position, _shootPoint.forward, _damage.Value);
         }
 
         public void OnDispose()
