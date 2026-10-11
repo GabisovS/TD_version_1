@@ -1,4 +1,5 @@
-﻿using Assets._Project.Develop.Runtime.Gameplay.EntitiesCore.Mono;
+﻿using Assets._Project.Develop.Runtime.Configs.Gameplay.Entities;
+using Assets._Project.Develop.Runtime.Gameplay.EntitiesCore.Mono;
 using Assets._Project.Develop.Runtime.Gameplay.Features.ApplyDamage;
 using Assets._Project.Develop.Runtime.Gameplay.Features.Attack;
 using Assets._Project.Develop.Runtime.Gameplay.Features.Attack.Shoot;
@@ -11,6 +12,7 @@ using Assets._Project.Develop.Runtime.Utilities;
 using Assets._Project.Develop.Runtime.Utilities.Conditions;
 using Assets._Project.Develop.Runtime.Utilities.Reactive;
 using UnityEngine;
+using static UnityEditor.Experimental.GraphView.GraphView;
 
 namespace Assets._Project.Develop.Runtime.Gameplay.EntitiesCore
 {
@@ -39,7 +41,8 @@ namespace Assets._Project.Develop.Runtime.Gameplay.EntitiesCore
         //L5 - Начинаем добавлять данные для работы процесса атаки
         //L5 - Добавляем компонент для определения движения сущности
         //L5 - Добиваем и проверяем процесс атаки
-        public Entity CreateHero(Vector3 position)
+        //L7 - Поддержка конфигов для персонажей
+        public Entity CreateHero(Vector3 position, HeroConfig config)
         {
             Entity entity = CreateEmpty();
 
@@ -47,29 +50,29 @@ namespace Assets._Project.Develop.Runtime.Gameplay.EntitiesCore
 
             entity
                 .AddMoveDirection()
-                .AddMoveSpeed(new ReactiveVariable<float>(10))
+                .AddMoveSpeed(new ReactiveVariable<float>(config.MoveSpeed))
                 .AddIsMoving()
                 .AddRotationDirection()
-                .AddRotationSpeed(new ReactiveVariable<float>(900))
-                .AddMaxHealth(new ReactiveVariable<float>(100))
-                .AddCurrentHealth(new ReactiveVariable<float>(100))
+                .AddRotationSpeed(new ReactiveVariable<float>(config.RotationSpeed))
+                .AddMaxHealth(new ReactiveVariable<float>(config.MaxHealth))
+                .AddCurrentHealth(new ReactiveVariable<float>(config.MaxHealth))
                 .AddIsDead()
                 .AddInDeathProcess()
-                .AddDeathProcessInitialTime(new ReactiveVariable<float>(2))
+                .AddDeathProcessInitialTime(new ReactiveVariable<float>(config.DeathProcessTime))
                 .AddDeathProcessCurrentTime()
                 .AddTakeDamageRequest()
                 .AddTakeDamageEvent()
-                .AddAttackProcessInitialTime(new ReactiveVariable<float>(3))
+                .AddAttackProcessInitialTime(new ReactiveVariable<float>(config.AttackProcessTime))
                 .AddAttackProcessCurrentTime()
                 .AddInAttackProcess()
                 .AddStartAttackRequest()
                 .AddStartAttackEvent()
                 .AddEndAttackEvent()
-                .AddAttackDelayTime(new ReactiveVariable<float>(1)) // L5 -Проверяем работу задержки
+                .AddAttackDelayTime(new ReactiveVariable<float>(config.AttackDelayTime)) // L5 -Проверяем работу задержки
                 .AddAttackDelayEndEvent() // L5 -Проверяем работу задержки
-                .AddInstantAttackDamage(new ReactiveVariable<float>(50)) //L5 - Проверяем механику выстрела
+                .AddInstantAttackDamage(new ReactiveVariable<float>(config.InstantAttackDamage)) //L5 - Проверяем механику выстрела
                 .AddAttackCanceledEvent()    //L5 - Механика отмены атаки. Данные
-                .AddAttackCooldownInitialTime(new ReactiveVariable<float>(2)) //L5 - Тестируем кулдаун атаки
+                .AddAttackCooldownInitialTime(new ReactiveVariable<float>(config.AttackCooldown)) //L5 - Тестируем кулдаун атаки
                 .AddAttackCooldownCurrentTime() //L5 - Тестируем кулдаун атаки
                 .AddInAttackCooldown(); //L5 - Тестируем кулдаун атаки
 
@@ -144,7 +147,8 @@ namespace Assets._Project.Develop.Runtime.Gameplay.EntitiesCore
         //L5 - Как будем получать сущности для нанесения урона
         //L5 - Фича нанесения урона касанием. Данные
         //L5 - Добавляем компонент для определения движения сущности
-        public Entity CreateGhost(Vector3 position)
+        //L7 - Поддержка конфигов для персонажей
+        public Entity CreateGhost(Vector3 position, GhostConfig config)
         {
             Entity entity = CreateEmpty();
             
@@ -155,22 +159,22 @@ namespace Assets._Project.Develop.Runtime.Gameplay.EntitiesCore
             //    .AddComponent(new MoveSpeed() { Value = new ReactiveVariable<float>(10) });
             entity
                 .AddMoveDirection()
-                .AddMoveSpeed(new ReactiveVariable<float>(10))
+                .AddMoveSpeed(new ReactiveVariable<float>(config.MoveSpeed))
                 .AddIsMoving()
                 .AddRotationDirection()
-                .AddRotationSpeed(new ReactiveVariable<float>(900))
-                .AddMaxHealth(new ReactiveVariable<float>(100))
-                .AddCurrentHealth(new ReactiveVariable<float>(100))
+                .AddRotationSpeed(new ReactiveVariable<float>(config.RotationSpeed))
+                .AddMaxHealth(new ReactiveVariable<float>(config.MaxHealth))
+                .AddCurrentHealth(new ReactiveVariable<float>(config.MaxHealth))
                 .AddIsDead()
                 .AddInDeathProcess()
-                .AddDeathProcessInitialTime(new ReactiveVariable<float>(2))
+                .AddDeathProcessInitialTime(new ReactiveVariable<float>(config.DeathProcessTime))
                 .AddDeathProcessCurrentTime()
                 .AddTakeDamageRequest()
                 .AddTakeDamageEvent()
-                .AddContactsDetectingMask(1 << LayerMask.NameToLayer("Characters"))
+                .AddContactsDetectingMask(Layers.CharactersMask) //L7 - Добавляем класс со слоями
                 .AddContactCollidersBuffer(new Buffer<Collider>(64))
                 .AddContactEntitiesBuffer(new Buffer<Entity>(64))
-                .AddBodyContactDamage(new ReactiveVariable<float>(50));
+                .AddBodyContactDamage(new ReactiveVariable<float>(config.BodyContactDamage));
 
             ICompositeCondition canMove = new CompositeCondition()
                .Add(new FuncCondition(() => entity.IsDead.Value == false));
@@ -233,11 +237,11 @@ namespace Assets._Project.Develop.Runtime.Gameplay.EntitiesCore
                 .AddRotationDirection(new ReactiveVariable<Vector3>(direction))
                 .AddRotationSpeed(new ReactiveVariable<float>(9999))
                 .AddIsDead()
-                .AddContactsDetectingMask(1 << LayerMask.NameToLayer("Characters"))
+                .AddContactsDetectingMask(Layers.CharactersMask) //L7 - Добавляем класс со слоями
                 .AddContactCollidersBuffer(new Buffer<Collider>(64))
                 .AddContactEntitiesBuffer(new Buffer<Entity>(64))
                 .AddBodyContactDamage(new ReactiveVariable<float>(damage))
-                .AddDeathMask(1 << LayerMask.NameToLayer("Characters")) //L5 - Механика смерти при касании. Данные
+                .AddDeathMask(Layers.CharactersMask) //L5 - Механика смерти при касании. Данные //L7 - Добавляем класс со слоями
                 .AddIsTouchDeathMask();     //L5 - Механика смерти при касании. Данные
 
             ICompositeCondition canMove = new CompositeCondition()

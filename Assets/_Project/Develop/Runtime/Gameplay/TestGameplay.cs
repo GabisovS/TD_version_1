@@ -1,4 +1,5 @@
-﻿using Assets._Project.Develop.Runtime.Gameplay.EntitiesCore;
+﻿using Assets._Project.Develop.Runtime.Configs.Gameplay.Entities;
+using Assets._Project.Develop.Runtime.Gameplay.EntitiesCore;
 using Assets._Project.Develop.Runtime.Gameplay.Features.AI;
 using Assets._Project.Develop.Runtime.Gameplay.Features.AI.States;
 using Assets._Project.Develop.Runtime.Gameplay.Features.MovementFeature;
@@ -18,6 +19,10 @@ namespace Assets._Project.Develop.Runtime.Gameplay
         private EntitiesFactory _entitiesFactory;
         private BrainsFactory _brainsFactory; //L5 - Тестируем работу ИИ
 
+        //L7 - Поддержка конфигов для персонажей
+        [SerializeField] private HeroConfig _heroConfig;
+        [SerializeField] private GhostConfig _ghostConfig;
+
         private Entity _entity;
         private Entity _ghost; //L5 - Тестируем работу ИИ
 
@@ -35,7 +40,7 @@ namespace Assets._Project.Develop.Runtime.Gameplay
         {
             
             //L5 - Готовим метод создания основного героя
-            _entity = _entitiesFactory.CreateHero(Vector3.zero);
+            _entity = _entitiesFactory.CreateHero(Vector3.zero, _heroConfig);
 
             //L5 - Тестируем получившуюся реализацию
             _entity.AddCurrentTarget();
@@ -44,7 +49,7 @@ namespace Assets._Project.Develop.Runtime.Gameplay
 
             //L5 - Добавляем коллайдеры. Механика призрака
             //L6 - Тестируем работу ИИ
-            _ghost = _entitiesFactory.CreateGhost(Vector3.zero+ Vector3.forward*5);
+            _ghost = _entitiesFactory.CreateGhost(Vector3.zero+ Vector3.forward*5, _ghostConfig);
 
             _isRunning = true;
         }
