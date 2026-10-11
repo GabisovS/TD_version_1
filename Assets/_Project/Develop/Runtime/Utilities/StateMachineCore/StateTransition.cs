@@ -2,7 +2,7 @@
 
 namespace Assets._Project.Develop.Runtime.Utilities.StateMachineCore
 {
-    //L5 - Реализуем переходы
+    //L6 - Реализуем переходы
     public class StateTransition<TState> where TState : class, IState
     {
         public StateTransition(StateNode<TState> toState, ICondition condition)

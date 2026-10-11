@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Assets._Project.Develop.Runtime.Utilities.StateMachineCore
 {
-    //L5
+    //L6
     public interface IUpdatableState : IState
     {
         void Update(float deltaTime);

@@ -2,7 +2,7 @@
 
 namespace Assets._Project.Develop.Runtime.Utilities.StateMachineCore
 {
-    //L5 - Реализуем базовый State
+    //L6 - Реализуем базовый State
     public abstract class State : IState
     {
         private ReactiveEvent _entered = new();

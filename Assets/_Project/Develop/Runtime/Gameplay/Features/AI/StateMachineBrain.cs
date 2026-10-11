@@ -1,6 +1,6 @@
 ﻿namespace Assets._Project.Develop.Runtime.Gameplay.Features.AI
 {
-    //L5 - Делаем реализацию мозгов на основе машины состояний
+    //L6 - Делаем реализацию мозгов на основе машины состояний
     public class StateMachineBrain : IBrain
     {
         private AIStateMachine _stateMachine;

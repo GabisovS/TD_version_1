@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Assets._Project.Develop.Runtime.Gameplay.EntitiesCore;
 using Assets._Project.Develop.Runtime.Gameplay.Features.AI.States;
+using Assets._Project.Develop.Runtime.Gameplay.Features.InputFeature;
 using Assets._Project.Develop.Runtime.Infrastructure.DI;
 using Assets._Project.Develop.Runtime.Utilities.Conditions;
 using Assets._Project.Develop.Runtime.Utilities.Reactive;
@@ -13,76 +14,82 @@ using UnityEngine;
 
 namespace Assets._Project.Develop.Runtime.Gameplay.Features.AI
 {
-    //L5 - Заводим фабрику для создания ИИ
-    //L5 - Настраиваем переходы между состояниями
-    //L5 - Фиксим отписки
+    //L6 - Заводим фабрику для создания ИИ
+    //L6 - Настраиваем переходы между состояниями
+    //L6 - Фиксим отписки
+    //L6 - Подключаем все в работу
     public class BrainsFactory
     {
         private readonly DIContainer _container;
         private readonly TimerServiceFactory _timerServiceFactory;
-        //private readonly AIBrainsContext _brainsContext;
-        //private readonly IInputService _inputService;
-        //private readonly EntitiesLifeContext _entitiesLifeContext;
+        private readonly AIBrainsContext _brainsContext;
+        private readonly IInputService _inputService;
+        private readonly EntitiesLifeContext _entitiesLifeContext;
 
         public BrainsFactory(DIContainer container)
         {
             _container = container;
             _timerServiceFactory = _container.Resolve<TimerServiceFactory>();
-            //_brainsContext = _container.Resolve<AIBrainsContext>();
-            //_inputService = _container.Resolve<IInputService>();
-            //_entitiesLifeContext = _container.Resolve<EntitiesLifeContext>();
+            _brainsContext = _container.Resolve<AIBrainsContext>();
+            _inputService = _container.Resolve<IInputService>();
+            _entitiesLifeContext = _container.Resolve<EntitiesLifeContext>();
         }
 
-        //public StateMachineBrain CreateMainHeroBrain(Entity entity, ITargetSelector targetSelector)
-        //{
-        //    AIStateMachine combatState = CreateAutoAttackStateMachine(entity);
+        //L6 - Формируем мозги для нашего героя
+        //L6 - Тестируем получившуюся реализацию
+        public StateMachineBrain CreateMainHeroBrain(Entity entity, ITargetSelector targetSelector)
+        {
+            AIStateMachine combatState = CreateAutoAttackStateMachine(entity);
 
-        //    PlayerInputMovementState movementState = new PlayerInputMovementState(entity, _inputService);
+            PlayerInputMovementState movementState = new PlayerInputMovementState(entity, _inputService);
 
-        //    ReactiveVariable<Entity> currentTarget = entity.CurrentTarget;
+            ReactiveVariable<Entity> currentTarget = entity.CurrentTarget;
 
-        //    ICompositeCondition fromMovementToCombatStateCondition = new CompositeCondition()
-        //        .Add(new FuncCondition(() => currentTarget.Value != null))
-        //        .Add(new FuncCondition(() => _inputService.Direction == Vector3.zero));
+            ICompositeCondition fromMovementToCombatStateCondition = new CompositeCondition()
+                .Add(new FuncCondition(() => currentTarget.Value != null))
+                .Add(new FuncCondition(() => _inputService.Direction == Vector3.zero));
 
-        //    ICompositeCondition fromCombatToMovementStateCondition = new CompositeCondition(LogicOperations.Or)
-        //        .Add(new FuncCondition(() => currentTarget.Value == null))
-        //        .Add(new FuncCondition(() => _inputService.Direction != Vector3.zero));
+            ICompositeCondition fromCombatToMovementStateCondition = new CompositeCondition(LogicOperations.Or)
+                .Add(new FuncCondition(() => currentTarget.Value == null))
+                .Add(new FuncCondition(() => _inputService.Direction != Vector3.zero));
 
-        //    AIStateMachine behaviour = new AIStateMachine();
+            AIStateMachine behaviour = new AIStateMachine();
 
-        //    behaviour.AddState(movementState);
-        //    behaviour.AddState(combatState);
+            behaviour.AddState(movementState);
+            behaviour.AddState(combatState);
 
-        //    behaviour.AddTransition(movementState, combatState, fromMovementToCombatStateCondition);
-        //    behaviour.AddTransition(combatState, movementState, fromCombatToMovementStateCondition);
+            behaviour.AddTransition(movementState, combatState, fromMovementToCombatStateCondition);
+            behaviour.AddTransition(combatState, movementState, fromCombatToMovementStateCondition);
 
-        //    FindTargetState findTargetState = new FindTargetState(targetSelector, _entitiesLifeContext, entity);
-        //    AIParallelState parallelState = new AIParallelState(findTargetState, behaviour);
+            //L6 - Добиваем логику поведения героя
+            FindTargetState findTargetState = new FindTargetState(targetSelector, _entitiesLifeContext, entity);
+            AIParallelState parallelState = new AIParallelState(findTargetState, behaviour);
 
-        //    AIStateMachine rootStateMachine = new AIStateMachine();
-        //    rootStateMachine.AddState(parallelState);
+            AIStateMachine rootStateMachine = new AIStateMachine();
+            rootStateMachine.AddState(parallelState);
 
-        //    StateMachineBrain brain = new StateMachineBrain(rootStateMachine);
-        //    _brainsContext.SetFor(entity, brain);
+            StateMachineBrain brain = new StateMachineBrain(rootStateMachine);
+            _brainsContext.SetFor(entity, brain);
 
-        //    return brain;
-        //}
+            return brain;
+  
+        }
 
 
-        //L5 - Делаем реализацию мозгов на основе машины состояний
+        //L6 - Делаем реализацию мозгов на основе машины состояний
+        //L6 - Подключаем все в работу
         public StateMachineBrain CreateGhostBrain(Entity entity)
         {
             AIStateMachine stateMachine = CreateRandomMovementStateMachine(entity);
             StateMachineBrain brain = new StateMachineBrain(stateMachine);
 
-            //_brainsContext.SetFor(entity, brain);
+            _brainsContext.SetFor(entity, brain);
 
             return brain;
         }
 
-        //L5 - Добиваем стейт машину случайного движения
-        //L5 - Делаем реализацию мозгов на основе машины состояний
+        //L6 - Добиваем стейт машину случайного движения
+        //L6 - Делаем реализацию мозгов на основе машины состояний
         private AIStateMachine CreateRandomMovementStateMachine(Entity entity)
         {
             List<IDisposable> disposables = new List<IDisposable>();
@@ -113,42 +120,44 @@ namespace Assets._Project.Develop.Runtime.Gameplay.Features.AI
             return stateMachine;
         }
 
-        //private AIStateMachine CreateAutoAttackStateMachine(Entity entity)
-        //{
-        //    RotateToTargetState rotateToTargetState = new RotateToTargetState(entity);
+        //L6 - Собираем стейт машину с автоматическим поворотом и атакой
+        private AIStateMachine CreateAutoAttackStateMachine(Entity entity)
+        {
+            RotateToTargetState rotateToTargetState = new RotateToTargetState(entity);
 
-        //    AttackTriggerState attackTriggerState = new AttackTriggerState(entity);
+            AttackTriggerState attackTriggerState = new AttackTriggerState(entity);
 
-        //    ICondition canAttack = entity.CanStartAttack;
-        //    Transform transform = entity.Transform;
-        //    ReactiveVariable<Entity> currentTarget = entity.CurrentTarget;
+            ICondition canAttack = entity.CanStartAttack;
+            Transform transform = entity.Transform;
+            ReactiveVariable<Entity> currentTarget = entity.CurrentTarget;
 
-        //    ICompositeCondition fromRotateToAttackCondition = new CompositeCondition()
-        //        .Add(canAttack)
-        //        .Add(new FuncCondition(() =>
-        //        {
-        //            Entity target = currentTarget.Value;
+            //условие перехода из поворота в состояния атаки
+            ICompositeCondition fromRotateToAttackCondition = new CompositeCondition()
+                .Add(canAttack)
+                .Add(new FuncCondition(() =>
+                {
+                    Entity target = currentTarget.Value;
 
-        //            if (target == null)
-        //                return false;
+                    if (target == null)
+                        return false;
 
-        //            float angleToTarget = Quaternion.Angle(transform.rotation, Quaternion.LookRotation(target.Transform.position - transform.position));
-        //            return angleToTarget < 1f;
-        //        }));
+                    float angleToTarget = Quaternion.Angle(transform.rotation, Quaternion.LookRotation(target.Transform.position - transform.position));
+                    return angleToTarget < 1f;
+                }));
 
-        //    ReactiveVariable<bool> inAttackProcess = entity.InAttackProcess;
+            ReactiveVariable<bool> inAttackProcess = entity.InAttackProcess;
 
-        //    ICondition fromAttackToRotateStateCondition = new FuncCondition(() => inAttackProcess.Value == false);
+            ICondition fromAttackToRotateStateCondition = new FuncCondition(() => inAttackProcess.Value == false);
 
-        //    AIStateMachine stateMachine = new AIStateMachine();
+            AIStateMachine stateMachine = new AIStateMachine();
 
-        //    stateMachine.AddState(rotateToTargetState);
-        //    stateMachine.AddState(attackTriggerState);
+            stateMachine.AddState(rotateToTargetState);
+            stateMachine.AddState(attackTriggerState);
 
-        //    stateMachine.AddTransition(rotateToTargetState, attackTriggerState, fromRotateToAttackCondition);
-        //    stateMachine.AddTransition(attackTriggerState, rotateToTargetState, fromAttackToRotateStateCondition);
+            stateMachine.AddTransition(rotateToTargetState, attackTriggerState, fromRotateToAttackCondition);
+            stateMachine.AddTransition(attackTriggerState, rotateToTargetState, fromAttackToRotateStateCondition);
 
-        //    return stateMachine;
-        //}
+            return stateMachine;
+        }
     }
 }

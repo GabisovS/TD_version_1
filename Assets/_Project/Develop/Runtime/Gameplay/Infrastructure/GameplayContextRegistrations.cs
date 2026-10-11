@@ -1,5 +1,7 @@
 ﻿using Assets._Project.Develop.Runtime.Gameplay.EntitiesCore;
 using Assets._Project.Develop.Runtime.Gameplay.EntitiesCore.Mono;
+using Assets._Project.Develop.Runtime.Gameplay.Features.AI;
+using Assets._Project.Develop.Runtime.Gameplay.Features.InputFeature;
 using Assets._Project.Develop.Runtime.Infrastructure.DI;
 using Assets._Project.Develop.Runtime.Utilities.AssetsManagment;
 using UnityEngine;
@@ -20,7 +22,32 @@ namespace Assets._Project.Develop.Runtime.Gameplay.Infrastructure
 
             container.RegisterAsSingle(CreateCollidersRegistryService);
 
+            container.RegisterAsSingle(CreateBrainsFactory);
+
+            container.RegisterAsSingle(CreateAIBrainsContext);
+
+            container.RegisterAsSingle<IInputService>(CreateDesktopInput);
+
             container.RegisterAsSingle(CreateMonoEntitiesFactory).NonLazy();
+        }
+
+        //L6 - Делаем ПК реализацию ввода
+        private static DesktopInput CreateDesktopInput(DIContainer c)
+        {
+            return new DesktopInput();
+        }
+
+
+        //L6 - Подключаем все в работу
+        private static AIBrainsContext CreateAIBrainsContext(DIContainer c)
+        {
+            return new AIBrainsContext();
+        }
+
+        //L6 - Подключаем все в работу
+        private static BrainsFactory CreateBrainsFactory(DIContainer c)
+        {
+            return new BrainsFactory(c);
         }
 
         //L5 - Делаем регистрации коллайдеров

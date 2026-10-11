@@ -7,15 +7,14 @@ using Assets._Project.Develop.Runtime.Utilities.Conditions;
 
 namespace Assets._Project.Develop.Runtime.Utilities.StateMachineCore
 {
-    //L5 - Стейт машина. Внутреннее устройство
-    //L5 - Как конфигурировать стейт машину
-    //L5 - Как будут выполняться переходы
-    //L5 - Анализ возможности перехода
-    //L5 - Начинаем делать ИИ для призрака
-    //L5 - Делаем стейт машину для AI
-    //public abstract class StateMachine<TState> : State, IDisposable, IUpdatableState where TState : class, IState
-    public abstract class StateMachine<TState> : State, IDisposable  where TState : class, IState
-
+    //L6 - Стейт машина. Внутреннее устройство
+    //L6 - Как конфигурировать стейт машину
+    //L6 - Как будут выполняться переходы
+    //L6 - Анализ возможности перехода
+    //L6 - Начинаем делать ИИ для призрака
+    //L6 - Делаем стейт машину для AI
+    //L6 - Реализуем возможность использовать стейт машину как состояние
+    public abstract class StateMachine<TState> : State, IDisposable, IUpdatableState where TState : class, IState
     {
         private List<StateNode<TState>> _states = new();
 
@@ -23,9 +22,9 @@ namespace Assets._Project.Develop.Runtime.Utilities.StateMachineCore
 
         private bool _isRunning; //включать-выключать стайт машину
 
-        private List<IDisposable> _disposables;     //L5 - Фиксим отписки
+        private List<IDisposable> _disposables;     //L6 - Фиксим отписки
 
-        protected StateMachine(List<IDisposable> disposables)     //L5 - Фиксим отписки
+        protected StateMachine(List<IDisposable> disposables)     //L6 - Фиксим отписки
         {
             _disposables = new List<IDisposable>(disposables);
         }
@@ -78,6 +77,7 @@ namespace Assets._Project.Develop.Runtime.Utilities.StateMachineCore
             _disposables.Clear();
         }
 
+        //L6 - Реализуем возможность использовать стейт машину как состояние
         public override void Enter()
         {
             base.Enter();
@@ -90,6 +90,7 @@ namespace Assets._Project.Develop.Runtime.Utilities.StateMachineCore
                 _isRunning = true;
         }
 
+        //L6 - Реализуем возможность использовать стейт машину как состояние
         public override void Exit()
         {
             base.Exit();

@@ -8,4 +8,10 @@ namespace Assets._Project.Develop.Runtime.Gameplay.Common
     {
         public Rigidbody Value;
     }
+
+    //L6 - Добавляем компонента трансформа
+    public class TransformComponent : IEntityComponent
+    {
+        public Transform Value;
+    }
 }

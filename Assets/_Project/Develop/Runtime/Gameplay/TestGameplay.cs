@@ -1,4 +1,6 @@
 ﻿using Assets._Project.Develop.Runtime.Gameplay.EntitiesCore;
+using Assets._Project.Develop.Runtime.Gameplay.Features.AI;
+using Assets._Project.Develop.Runtime.Gameplay.Features.AI.States;
 using Assets._Project.Develop.Runtime.Gameplay.Features.MovementFeature;
 using Assets._Project.Develop.Runtime.Infrastructure.DI;
 using UnityEngine;
@@ -14,8 +16,10 @@ namespace Assets._Project.Develop.Runtime.Gameplay
     {
         private DIContainer _container;
         private EntitiesFactory _entitiesFactory;
+        private BrainsFactory _brainsFactory; //L5 - Тестируем работу ИИ
 
         private Entity _entity;
+        private Entity _ghost; //L5 - Тестируем работу ИИ
 
         private bool _isRunning;
 
@@ -23,6 +27,7 @@ namespace Assets._Project.Develop.Runtime.Gameplay
         {
             _container = container;
             _entitiesFactory = _container.Resolve<EntitiesFactory>();
+            _brainsFactory = _container.Resolve<BrainsFactory>();
         }
 
         //L4 - Тестируем работу с MonoEntity
@@ -30,14 +35,16 @@ namespace Assets._Project.Develop.Runtime.Gameplay
         {
             
             //L5 - Готовим метод создания основного героя
-            //_entity = _entitiesFactory.CreateGhost(Vector3.zero);
             _entity = _entitiesFactory.CreateHero(Vector3.zero);
 
+            //L5 - Тестируем получившуюся реализацию
+            _entity.AddCurrentTarget();
+            //L6 - Тестируем поведение. Проблема текущей реактивности
+            _brainsFactory.CreateMainHeroBrain(_entity, new NearestDamageableTargetSelector(_entity));
+
             //L5 - Добавляем коллайдеры. Механика призрака
-            _entitiesFactory.CreateGhost(Vector3.zero+ Vector3.forward*5);
-
-            //Entity entity = _entitiesFactory.CreateTestEntity(Vector3.zero);
-
+            //L6 - Тестируем работу ИИ
+            _ghost = _entitiesFactory.CreateGhost(Vector3.zero+ Vector3.forward*5);
 
             _isRunning = true;
         }
@@ -56,13 +63,11 @@ namespace Assets._Project.Develop.Runtime.Gameplay
             if (Input.GetKeyDown(KeyCode.R))
                 _entity.StartAttackRequest.Invoke();
 
-            Vector3 input = new Vector3(Input.GetAxisRaw("Horizontal"), 0, Input.GetAxisRaw("Vertical"));
+            //L6 - Тестируем работу ИИ
+            if (Input.GetKeyDown(KeyCode.I))
+                _brainsFactory.CreateGhostBrain(_ghost);
 
-            _entity.MoveDirection.Value = input;
-            //_entity.GetComponent<MoveDirection>().Value.Value = input;
 
-            //L5 - Конфигурируем призрака и тестим
-            _entity.RotationDirection.Value = input;
         }
     }
 }

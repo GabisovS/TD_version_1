@@ -8,6 +8,7 @@ namespace Assets._Project.Develop.Runtime.Gameplay.EntitiesCore
     //L4 - Организуем подключение систем к Entity
     //L4 - Реализуем методы жизненного цикла Entity
     //L4 - Решаем проблему засорения класса Entity
+    //L6 - Добавляем компонент текущей цели
     public partial class Entity : IDisposable
     {
         private readonly Dictionary<Type, IEntityComponent> _components = new();
@@ -19,6 +20,9 @@ namespace Assets._Project.Develop.Runtime.Gameplay.EntitiesCore
         private readonly List<IDisposableSystem> _disposables = new();
 
         private bool _isInit;
+
+        //L5 - Реализуем апдейт ИИ
+        public bool IsInit => _isInit; //для проверки работает сущность или задиспозилась
 
         //Методы для организации жизненного цикла системы
         public void Initialize()
@@ -114,5 +118,9 @@ namespace Assets._Project.Develop.Runtime.Gameplay.EntitiesCore
 
             return this;
         }
+
+        //L6 - Добавляем компонент текущей цели
+        //L6 - Прокачиваем реактивность
+        //public bool Equals(Entity other) => other == this;
     }
 }

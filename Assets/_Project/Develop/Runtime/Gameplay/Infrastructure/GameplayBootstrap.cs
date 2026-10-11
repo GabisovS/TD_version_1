@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using Assets._Project.Develop.Runtime.Gameplay.EntitiesCore;
+using Assets._Project.Develop.Runtime.Gameplay.Features.AI;
 using Assets._Project.Develop.Runtime.Infrastructure;
 using Assets._Project.Develop.Runtime.Infrastructure.DI;
 using Assets._Project.Develop.Runtime.Utilities.CoroutinesManagment;
@@ -20,6 +21,7 @@ namespace Assets._Project.Develop.Runtime.Gameplay.Infrastructure
 
         [SerializeField] private TestGameplay _testGameplay;
         private EntitiesLifeContext _entitiesLifeContext;
+        private AIBrainsContext _brainsContext;         //L5 - Подключаем все в работу
 
         //L1 - Поддержка глобального контейнера и контейнера сцены
         public override void ProcessRigstrations(DIContainer container, IInputSceneArgs sceneArgs = null)
@@ -41,6 +43,7 @@ namespace Assets._Project.Develop.Runtime.Gameplay.Infrastructure
             Debug.Log("Инициаплизация гейплейной сцены");
 
             _entitiesLifeContext = _container.Resolve<EntitiesLifeContext>();
+            _brainsContext = _container.Resolve<AIBrainsContext>();         //L5 - Подключаем все в работу
 
             _testGameplay.Initialize(_container);
 
@@ -56,6 +59,8 @@ namespace Assets._Project.Develop.Runtime.Gameplay.Infrastructure
 
         private void Update()
         {
+            _brainsContext?.Update(Time.deltaTime);         //L5 - Подключаем все в работу
+
             _entitiesLifeContext?.Update(Time.deltaTime);
             if (Input.GetKeyDown(KeyCode.F))
             {

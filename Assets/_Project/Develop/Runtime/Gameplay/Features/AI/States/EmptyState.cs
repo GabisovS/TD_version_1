@@ -2,8 +2,8 @@
 
 namespace Assets._Project.Develop.Runtime.Gameplay.Features.AI.States
 {
-    //L5 - Реализуем состояние покоя
-    //L5 - Делаем стейт машину для AI
+    //L6 - Реализуем состояние покоя
+    //L6 - Делаем стейт машину для AI
     public class EmptyState : State, IUpdatableState
     {
         public void Update(float deltaTime)

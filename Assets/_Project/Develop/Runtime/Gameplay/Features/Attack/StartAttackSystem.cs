@@ -7,7 +7,7 @@ using UnityEngine;
 
 namespace Assets._Project.Develop.Runtime.Gameplay.Features.Attack
 {
-    //L5 - Система старта атаки
+    //L6 - Система старта атаки
     public class StartAttackSystem : IInitializableSystem, IDisposableSystem
     {
         private ReactiveEvent _startAttackRequest;

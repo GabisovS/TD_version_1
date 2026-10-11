@@ -2,7 +2,7 @@
 
 namespace Assets._Project.Develop.Runtime.Utilities.StateMachineCore
 {
-    //L5 - Объявляем IState
+    //L6 - Объявляем IState
     public interface IState
     {
         IReadOnlyEvent Entered { get; }

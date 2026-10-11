@@ -13,6 +13,9 @@ namespace Assets._Project.Develop.Runtime.Gameplay.EntitiesCore
         private readonly List<Entity> _entities = new();
         private readonly List<Entity> _releaseRequests = new(); //список запросов на освобождения от системы
 
+        //L6 - Состояние поиска текущей цели
+        public IReadOnlyList<Entity> Entities => _entities;
+
         public void Add(Entity entity)
         {
             _entities.Add(entity);
