@@ -181,7 +181,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _heroConfig: {fileID: 11400000, guid: 82ae76f58035a9f409122bf88e74ac45, type: 2}
-  _ghostConfig: {fileID: 11400000, guid: 409e5569808ba5640b53c8392dc8f867, type: 2}
+  _stageConfig: {fileID: 11400000, guid: c6262924647b87b43b52e0d26b34e850, type: 2}
 --- !u!1 &309886952
 GameObject:
   m_ObjectHideFlags: 0

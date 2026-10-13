@@ -5,6 +5,7 @@ using Assets._Project.Develop.Runtime.Gameplay.Features.AI;
 using Assets._Project.Develop.Runtime.Gameplay.Features.Enemies;
 using Assets._Project.Develop.Runtime.Gameplay.Features.InputFeature;
 using Assets._Project.Develop.Runtime.Gameplay.Features.MainHero;
+using Assets._Project.Develop.Runtime.Gameplay.Features.StageFeature;
 using Assets._Project.Develop.Runtime.Infrastructure.DI;
 using Assets._Project.Develop.Runtime.Utilities.AssetsManagment;
 using Assets._Project.Develop.Runtime.Utilities.ConfigsManagment;
@@ -15,6 +16,8 @@ namespace Assets._Project.Develop.Runtime.Gameplay.Infrastructure
     //L1 - Поддержка глобального контейнера и контейнера сцены
     public class GameplayContextRegistrations
     {
+        private static GameplayInputArgs _inputArgs;     //L7 - Добавляем функциональность
+
         //Процесс регистрации сервисов на сцене геймплея
         public static void Process(DIContainer container, GameplayInputArgs args)
         {
@@ -33,8 +36,8 @@ namespace Assets._Project.Develop.Runtime.Gameplay.Infrastructure
             container.RegisterAsSingle(CreateMainHeroFactory);
             container.RegisterAsSingle(CreateEnemiesFactory);
 
-            //container.RegisterAsSingle(CreateStagesFactory);
-            //container.RegisterAsSingle(CreateStageProviderService);
+            container.RegisterAsSingle(CreateStagesFactory);
+            container.RegisterAsSingle(CreateStageProviderService);
 
             //container.RegisterAsSingle(CreatePreperationTriggerService);
 
@@ -71,17 +74,19 @@ namespace Assets._Project.Develop.Runtime.Gameplay.Infrastructure
         //        c.Resolve<EntitiesLifeContext>());
         //}
 
-        //private static StageProviderService CreateStageProviderService(DIContainer c)
-        //{
-        //    return new StageProviderService(
-        //        c.Resolve<ConfigsProviderService>().GetConfig<LevelsListConfig>().GetBy(_inputArgs.LevelNumber),
-        //        c.Resolve<StagesFactory>());
-        //}
+        //L7 - Добавляем функциональность
+        private static StageProviderService CreateStageProviderService(DIContainer c)
+        {
+            return new StageProviderService(
+                c.Resolve<ConfigsProviderService>().GetConfig<LevelsListConfig>().GetBy(_inputArgs.LevelNumber),
+                c.Resolve<StagesFactory>());
+        }
 
-        //private static StagesFactory CreateStagesFactory(DIContainer c)
-        //{
-        //    return new StagesFactory(c);
-        //}
+        //L7 - Заводим фабрику стейджей
+        private static StagesFactory CreateStagesFactory(DIContainer c)
+        {
+            return new StagesFactory(c);
+        }
 
         //L7 - Тестируем фабрики
         private static EnemiesFactory CreateEnemiesFactory(DIContainer c)

@@ -1,11 +1,15 @@
-﻿using Assets._Project.Develop.Runtime.Configs.Gameplay.Entities;
+﻿using System;
+using Assets._Project.Develop.Runtime.Configs.Gameplay.Entities;
+using Assets._Project.Develop.Runtime.Configs.Gameplay.Stages;
 using Assets._Project.Develop.Runtime.Gameplay.EntitiesCore;
 using Assets._Project.Develop.Runtime.Gameplay.Features.AI;
 using Assets._Project.Develop.Runtime.Gameplay.Features.AI.States;
 using Assets._Project.Develop.Runtime.Gameplay.Features.Enemies;
 using Assets._Project.Develop.Runtime.Gameplay.Features.MainHero;
 using Assets._Project.Develop.Runtime.Gameplay.Features.MovementFeature;
+using Assets._Project.Develop.Runtime.Gameplay.Features.StageFeature;
 using Assets._Project.Develop.Runtime.Infrastructure.DI;
+using Assets._Project.Develop.Runtime.Utilities.StateMachineCore;
 using UnityEngine;
 
 
@@ -23,7 +27,10 @@ namespace Assets._Project.Develop.Runtime.Gameplay
 
         //L7 - Поддержка конфигов для персонажей
         [SerializeField] private HeroConfig _heroConfig;
-        [SerializeField] private GhostConfig _ghostConfig;
+        //[SerializeField] private GhostConfig _ghostConfig; //L7 - Тестируем стейдж зачистки врагов
+        [SerializeField] private StageConfig _stageConfig; //L7 - Тестируем стейдж зачистки врагов
+        private StagesFactory _stagesFactory;
+        private IStage _stage;
 
         //L7 - Тестируем фабрики
         private MainHeroFactory _mainHeroFactory;
@@ -42,6 +49,8 @@ namespace Assets._Project.Develop.Runtime.Gameplay
 
             _mainHeroFactory = _container.Resolve<MainHeroFactory>();
             _enemiesFactory = _container.Resolve<EnemiesFactory>();
+
+            _stagesFactory = _container.Resolve<StagesFactory>();
         }
 
         //L4 - Тестируем работу с MonoEntity
@@ -49,7 +58,13 @@ namespace Assets._Project.Develop.Runtime.Gameplay
         public void Run()
         {
             _entity = _mainHeroFactory.Create(Vector3.zero);
-            _ghost = _enemiesFactory.Create(Vector3.zero + Vector3.forward * 5, _ghostConfig);
+
+            //L7 - Тестируем стейдж зачистки врагов
+            _stage = _stagesFactory.Create(_stageConfig);
+            _stage.Completed.Subscribe(OnCompl);
+            _stage.Start();
+
+            //_ghost = _enemiesFactory.Create(Vector3.zero + Vector3.forward * 5, _ghostConfig);
 
             ////L5 - Готовим метод создания основного героя
             //_entity = _entitiesFactory.CreateHero(Vector3.zero, _heroConfig);
@@ -66,12 +81,20 @@ namespace Assets._Project.Develop.Runtime.Gameplay
             _isRunning = true;
         }
 
+        private void OnCompl()
+        {
+            Debug.Log("WIN WIN WIN");
+            _stage.Cleanup();
+        }
+
         //L5 - Добавляем механику смерти призраку
         private void Update()
         {
             if (_isRunning == false) //если геймплей еще не запущен
                 return;
 
+            //L7 - Тестируем стейдж зачистки врагов
+            _stage.Update(Time.deltaTime);
 
             //L7 - Тестируем фабрики
             ////L5 - Фича получения урона. Компоненты
