@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Assets._Project.Develop.Runtime.Configs.Gameplay.Entities;
 using Assets._Project.Develop.Runtime.Configs.Gameplay.Levels;
 using Assets._Project.Develop.Runtime.Configs.Meta.Wallet;
 using Assets._Project.Develop.Runtime.Utilities.AssetsManagment;
@@ -20,6 +21,7 @@ namespace Assets._Project.Develop.Runtime.Utilities.ConfigsManagment
             {typeof(StartWalletConfig), "Configs/Meta/Wallet/StartWalletConfig" },     //L2 - Откуда брать стартовое состояние данных
             {typeof(CurrencyIconsConfig), "Configs/Meta/Wallet/CurrencyIconsConfig" },     //L2 - Конфиг для иконок валют
             {typeof(LevelsListConfig), "Configs/Gameplay/Levels/LevelsListConfig" },     //L3 - Делаем конфиги уровней
+            {typeof(HeroConfig), "Configs/Gameplay/Entities/Characters/HeroConfig" },     //L7 - Тестируем фабрики
         
         
         };

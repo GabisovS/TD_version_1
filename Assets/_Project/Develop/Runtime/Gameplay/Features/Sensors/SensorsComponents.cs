@@ -38,4 +38,10 @@ namespace Assets._Project.Develop.Runtime.Gameplay.Features.Sensors
     {
         public ReactiveVariable<bool> Value;
     }
+
+    //L7 - Добавляем проверку касания другой команды
+    public class IsTouchAnotherTeam : IEntityComponent
+    {
+        public ReactiveVariable<bool> Value;
+    }
 }

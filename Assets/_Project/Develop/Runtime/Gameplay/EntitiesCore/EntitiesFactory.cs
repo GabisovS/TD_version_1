@@ -7,6 +7,7 @@ using Assets._Project.Develop.Runtime.Gameplay.Features.ContactTakeDamage;
 using Assets._Project.Develop.Runtime.Gameplay.Features.LifeCycle;
 using Assets._Project.Develop.Runtime.Gameplay.Features.MovementFeature;
 using Assets._Project.Develop.Runtime.Gameplay.Features.Sensors;
+using Assets._Project.Develop.Runtime.Gameplay.Features.TeamsFeature;
 using Assets._Project.Develop.Runtime.Infrastructure.DI;
 using Assets._Project.Develop.Runtime.Utilities;
 using Assets._Project.Develop.Runtime.Utilities.Conditions;
@@ -127,8 +128,9 @@ namespace Assets._Project.Develop.Runtime.Gameplay.EntitiesCore
                 .AddSystem(new DisableCollidersOnDeathSystem())
                 .AddSystem(new DeathProcessTimerSystem())
                 .AddSystem(new SelfReleaseSystem(_entitiesLifeContext));
-
-            _entitiesLifeContext.Add(entity);
+            
+            //L7 - Создаем фабрику главного героя
+            //_entitiesLifeContext.Add(entity); - Запись удаляется, т.к. сначала сформируем сущность главного героя и затем ее добавим сюда
 
             return entity;
         }
@@ -217,14 +219,16 @@ namespace Assets._Project.Develop.Runtime.Gameplay.EntitiesCore
 
             //entity.AddSystem(new RigidbodyMovementSystem());
 
+            //L7 - Создаем фабрику врагов - запись удаляется т.к. сущность создается в своей фабрике
             //Сущность автоматически добавляется в сервис жизненного цикла
-            _entitiesLifeContext.Add(entity);
+            //_entitiesLifeContext.Add(entity);
 
             return entity;
         }
 
         //L5 - Добавляем метод создания снаряда
-        public Entity CreateProjectile(Vector3 position, Vector3 direction, float damage)
+        //L7 - Добиваем проджектайл
+        public Entity CreateProjectile(Vector3 position, Vector3 direction, float damage, Entity owner)
         {
             Entity entity = CreateEmpty();
 
@@ -237,12 +241,14 @@ namespace Assets._Project.Develop.Runtime.Gameplay.EntitiesCore
                 .AddRotationDirection(new ReactiveVariable<Vector3>(direction))
                 .AddRotationSpeed(new ReactiveVariable<float>(9999))
                 .AddIsDead()
-                .AddContactsDetectingMask(Layers.CharactersMask) //L7 - Добавляем класс со слоями
+                .AddContactsDetectingMask(Layers.CharactersMask | Layers.EnviromentMask)  //L7 - Добавляем новый слой окружения //L7 - Добавляем класс со слоями
                 .AddContactCollidersBuffer(new Buffer<Collider>(64))
                 .AddContactEntitiesBuffer(new Buffer<Entity>(64))
                 .AddBodyContactDamage(new ReactiveVariable<float>(damage))
-                .AddDeathMask(Layers.CharactersMask) //L5 - Механика смерти при касании. Данные //L7 - Добавляем класс со слоями
-                .AddIsTouchDeathMask();     //L5 - Механика смерти при касании. Данные
+                .AddDeathMask(Layers.EnviromentMask)  //L7 - Добавляем новый слой окружения - //L5 - Механика смерти при касании. Данные //L7 - Добавляем класс со слоями
+                .AddIsTouchDeathMask()     //L5 - Механика смерти при касании. Данные
+                .AddIsTouchAnotherTeam() //L7 - Добиваем проджектайл
+                .AddTeam(new ReactiveVariable<Teams>(owner.Team.Value)); //L7 - Добиваем проджектайл
 
             ICompositeCondition canMove = new CompositeCondition()
                 .Add(new FuncCondition(() => entity.IsDead.Value == false));
@@ -251,8 +257,9 @@ namespace Assets._Project.Develop.Runtime.Gameplay.EntitiesCore
                 .Add(new FuncCondition(() => entity.IsDead.Value == false));
 
             //L5 - Механика смерти при касании. Данные
-            ICompositeCondition mustDie = new CompositeCondition()
-                .Add(new FuncCondition(() => entity.IsTouchDeathMask.Value));
+            ICompositeCondition mustDie = new CompositeCondition(LogicOperations.Or) //L7 - Добиваем проджектайл
+                .Add(new FuncCondition(() => entity.IsTouchDeathMask.Value))
+                .Add(new FuncCondition(() => entity.IsTouchAnotherTeam.Value));
 
             ICompositeCondition mustSelfRelease = new CompositeCondition()
                 .Add(new FuncCondition(() => entity.IsDead.Value));
@@ -270,6 +277,7 @@ namespace Assets._Project.Develop.Runtime.Gameplay.EntitiesCore
                 .AddSystem(new BodyContactsEntitiesFilterSystem(_collidersRegistryService))
                 .AddSystem(new DealDamageOnContactSystem())
                 .AddSystem(new DeathMaskTouchDetectorSystem()) //L5 - DeathMaskTouchDetectorSystem - Тестируем уничтожение снарядов
+                .AddSystem(new AnotherTeamTouchDetectorSystem()) //L7 - Добиваем проджектайл
                 .AddSystem(new DeathSystem())
                 .AddSystem(new DisableCollidersOnDeathSystem())
                 .AddSystem(new SelfReleaseSystem(_entitiesLifeContext));

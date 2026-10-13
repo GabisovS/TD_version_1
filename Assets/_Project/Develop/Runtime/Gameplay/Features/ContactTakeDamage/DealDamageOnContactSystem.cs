@@ -14,6 +14,7 @@ namespace Assets._Project.Develop.Runtime.Gameplay.Features.ContactTakeDamage
     //L5 - Система нанесения урона касанием
     public class DealDamageOnContactSystem : IInitializableSystem, IUpdatableSystem
     {
+        private Entity _entity; //L7 -  Добавляем поддержку команд в нанесение урона
         private Buffer<Entity> _contacts;
         private ReactiveVariable<float> _damage;
 
@@ -21,6 +22,7 @@ namespace Assets._Project.Develop.Runtime.Gameplay.Features.ContactTakeDamage
 
         public void OnInit(Entity entity)
         {
+            _entity = entity;
             _contacts = entity.ContactEntitiesBuffer;
             _damage = entity.BodyContactDamage;
 
@@ -37,8 +39,9 @@ namespace Assets._Project.Develop.Runtime.Gameplay.Features.ContactTakeDamage
                 {
                     _processedEntities.Add(contactEntity);
 
-                    if (contactEntity.HasComponent<TakeDamageRequest>())
-                        contactEntity.TakeDamageRequest.Invoke(_damage.Value);
+                    //Процесс нанесения урона
+                    //L7 - Не боимся пользоваться статикой
+                    EntitiesHelper.TryTakeDamageFrom(_entity, contactEntity, _damage.Value);
                 }
             }
 
@@ -47,6 +50,9 @@ namespace Assets._Project.Develop.Runtime.Gameplay.Features.ContactTakeDamage
                 if (ContainInContacts(_processedEntities[i]) == false)
                     _processedEntities.RemoveAt(i);
         }
+       
+        //L7 -  Добавляем поддержку команд в нанесение урона
+         //получилось нанести урон или нет
 
         public bool ContainInContacts(Entity entity)
         {

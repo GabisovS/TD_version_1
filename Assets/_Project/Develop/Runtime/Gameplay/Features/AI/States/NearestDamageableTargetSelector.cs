@@ -2,7 +2,9 @@
 using System.Linq;
 using Assets._Project.Develop.Runtime.Gameplay.EntitiesCore;
 using Assets._Project.Develop.Runtime.Gameplay.Features.ApplyDamage;
+using Assets._Project.Develop.Runtime.Gameplay.Features.TeamsFeature;
 using Assets._Project.Develop.Runtime.Utilities.Conditions;
+using Assets._Project.Develop.Runtime.Utilities.Reactive;
 using UnityEngine;
 
 namespace Assets._Project.Develop.Runtime.Gameplay.Features.AI.States
@@ -30,6 +32,13 @@ namespace Assets._Project.Develop.Runtime.Gameplay.Features.AI.States
                 if (target.TryGetCanApplyDamage(out ICompositeCondition canApplyDamage))
                 {
                     result = result && canApplyDamage.Evaluate();
+                }
+
+                //L7 - Добиваем логику выбора цели с учетом команд
+                if (_source.TryGetTeam(out ReactiveVariable<Teams> sourceTeam)
+                    && target.TryGetTeam(out ReactiveVariable<Teams> targetTeam))
+                {
+                    result = result && (sourceTeam.Value != targetTeam.Value);
                 }
 
                 result = result && (target != _source);
