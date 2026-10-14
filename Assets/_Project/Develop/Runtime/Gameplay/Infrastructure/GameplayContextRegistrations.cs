@@ -6,6 +6,7 @@ using Assets._Project.Develop.Runtime.Gameplay.Features.Enemies;
 using Assets._Project.Develop.Runtime.Gameplay.Features.InputFeature;
 using Assets._Project.Develop.Runtime.Gameplay.Features.MainHero;
 using Assets._Project.Develop.Runtime.Gameplay.Features.StageFeature;
+using Assets._Project.Develop.Runtime.Gameplay.States;
 using Assets._Project.Develop.Runtime.Infrastructure.DI;
 using Assets._Project.Develop.Runtime.Utilities.AssetsManagment;
 using Assets._Project.Develop.Runtime.Utilities.ConfigsManagment;
@@ -39,40 +40,45 @@ namespace Assets._Project.Develop.Runtime.Gameplay.Infrastructure
             container.RegisterAsSingle(CreateStagesFactory);
             container.RegisterAsSingle(CreateStageProviderService);
 
-            //container.RegisterAsSingle(CreatePreperationTriggerService);
+            container.RegisterAsSingle(CreatePreperationTriggerService);
 
-            //container.RegisterAsSingle(CreateGameplayStatesFactory);
+            container.RegisterAsSingle(CreateGameplayStatesFactory);
 
-            //container.RegisterAsSingle(CreateGameplayStatesContext);
+            container.RegisterAsSingle(CreateGameplayStatesContext);
 
-            //container.RegisterAsSingle(CreateMainHeroHolderService).NonLazy();
+            container.RegisterAsSingle(CreateMainHeroHolderService).NonLazy();
 
             container.RegisterAsSingle<IInputService>(CreateDesktopInput);
 
             container.RegisterAsSingle(CreateMonoEntitiesFactory).NonLazy();
         }
 
-        //private static GameplayStatesContext CreateGameplayStatesContext(DIContainer c)
-        //{
-        //    return new GameplayStatesContext(c.Resolve<GameplayStatesFactory>().CreateGameplayStateMachine(_inputArgs));
-        //}
+        //L7 - Делаем GameplayStatesContext
+        private static GameplayStatesContext CreateGameplayStatesContext(DIContainer c)
+        {
+            return new GameplayStatesContext(c.Resolve<GameplayStatesFactory>().CreateGameplayStateMachine(_inputArgs));
+        }
 
-        //private static GameplayStatesFactory CreateGameplayStatesFactory(DIContainer c)
-        //{
-        //    return new GameplayStatesFactory(c);
-        //}
+        //L7 - Делаем GameplayStatesContext
+        private static GameplayStatesFactory CreateGameplayStatesFactory(DIContainer c)
+        {
+            return new GameplayStatesFactory(c);
+        }
 
-        //private static MainHeroHolderService CreateMainHeroHolderService(DIContainer c)
-        //{
-        //    return new MainHeroHolderService(c.Resolve<EntitiesLifeContext>());
-        //}
+        //Д7 - Сервис хранения главного героя
+        private static MainHeroHolderService CreateMainHeroHolderService(DIContainer c)
+        {
+            return new MainHeroHolderService(c.Resolve<EntitiesLifeContext>());
+        }
 
-        //private static PreperationTriggerService CreatePreperationTriggerService(DIContainer c)
-        //{
-        //    return new PreperationTriggerService(
-        //        c.Resolve<EntitiesFactory>(),
-        //        c.Resolve<EntitiesLifeContext>());
-        //}
+
+        //L7 - Реализуем функционал
+        private static PreperationTriggerService CreatePreperationTriggerService(DIContainer c)
+        {
+            return new PreperationTriggerService(
+                c.Resolve<EntitiesFactory>(),
+                c.Resolve<EntitiesLifeContext>());
+        }
 
         //L7 - Добавляем функциональность
         private static StageProviderService CreateStageProviderService(DIContainer c)

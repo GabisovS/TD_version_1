@@ -74,4 +74,7 @@ public class ListOfCourceLessons : MonoBehaviour
 
     //L7 - Добиваем конфигурацию уровней
     // Создаем конфиги для уровней
+
+    //ContactTrigger
+    //L7 - Заводим префаб триггера
 }
